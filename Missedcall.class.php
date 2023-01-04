@@ -63,7 +63,7 @@ class Missedcall extends FreePBX_Helpers implements BMO {
 		foreach($users as $ext){
 			if(!empty($ext)){
 				$response = $this->FreePBX->astman->database_put("AMPUSER","$ext/missedcall", "disable");
-				$this->update($ext,0, 0, 0, 1);
+				$this->update($ext,0, 0, 0, 0);
 			}			
 		}
 	}
@@ -84,6 +84,14 @@ class Missedcall extends FreePBX_Helpers implements BMO {
 		foreach($users as $ext){
 			$this->FreePBX->astman->database_del("AMPUSER","$ext/missedcall");
 		}
+		// remove userman settings
+		$queries[] = "DELETE  FROM userman_groups_settings WHERE `module`= 'missedcall'";
+		$queries[] = "DELETE  FROM userman_groups_settings WHERE `module`= 'ucp|Missedcall'";
+		$queries[] = "DELETE  FROM userman_users_settings WHERE `module`= 'missedcall'";
+		foreach($queries as $query){
+			$stmt = $this->db->prepare($query);
+			$stmt->execute();
+		}
 	}
 	// fetchall call belong to given linkedid
 	public function getallcalls($linkedid){
@@ -101,7 +109,7 @@ class Missedcall extends FreePBX_Helpers implements BMO {
 		return;
 	}
 	
-	public function sendEmail($mc_email,$ext,$mcexten,$mcname=""){
+	public function sendEmail($mc_email,$ext,$mcexten,$mcname="",$calltype){
 	// determine from email address for notification
 	$fr_email = $this->FreePBX->Config()->get('AMPUSERMANEMAILFROM');
 	$fr_name = _("Missed Call Notification");
@@ -109,11 +117,12 @@ class Missedcall extends FreePBX_Helpers implements BMO {
 		$fr_email = 'email@domain.com';
 		$fr_name = $this->FreePBX->Config()->get('DASHBOARD_FREEPBX_BRAND');;
 	}
-		$emailData['brandName'] = $this->FreePBX->Config()->get('BRAND_FREEPBX_ALT_LEFT');
+		$emailData['brand'] = $this->FreePBX->Config()->get('BRAND_FREEPBX_ALT_LEFT');
 		$emailData['extension'] = $ext;
 		$emailData['callerid'] = $mcexten;
 		$emailData['calleridname'] = $mcname;
-		$emailData['datetime'] = date(r);
+		$emailData['datetime'] = date("Y-m-d H:i:s");
+		$emailData['calltype'] = $calltype;
 
 		// Get mail template
 		$emailTemplate = $this->getMailTemplate('notification_mail');
@@ -122,7 +131,7 @@ class Missedcall extends FreePBX_Helpers implements BMO {
 		$subject = !empty($emailTemplate['subject']) ? $emailTemplate['subject'] : self::EMAIL_SUBJECT;
 		$subject = $this->replaceTemplateVariables($subject, $emailData);
 
-		$body = !empty($emailTemplate['type']) ? $emailTemplate['type'] : file_get_contents(__DIR__ . '/views/mail.tpl');
+		$body = !empty($emailTemplate['body']) ? $emailTemplate['body'] : file_get_contents(__DIR__ . '/views/mail.tpl');
 		$body = $this->replaceTemplateVariables($body, $emailData);
 		$body = $emailType == self::EMAIL_TYPE_HTML ? html_entity_decode($body, ENT_QUOTES) : $body;
 
@@ -130,7 +139,7 @@ class Missedcall extends FreePBX_Helpers implements BMO {
 		$em->from($fr_email, $fr_name);
 		$em->to($mc_email);
 		$em->subject($subject);
-		$email->set_mailtype($emailType);
+		$em->set_mailtype($emailType);
 		$em->message($body);
 		$em->send();
 		dbug("Sending missed call notification to ".$mc_email);
@@ -582,7 +591,7 @@ class Missedcall extends FreePBX_Helpers implements BMO {
 		$c = '_.';
 		$ext->add($id, $c, '', new \ext_noop('Callee: ${EXTEN}'));
 		$ext->add($id, $c, '', new \ext_noop('Caller: ${MCEXTEN}'));
-		$ext->add($id, $c, '',new \ext_agi('missedcallnotify.php,${MCEXTTOCALL},,${EXTEN},${DB_EXISTS(AMPUSER/${EXTEN}/missedcall)},${DB(AMPUSER/${EXTEN}/missedcall)},${CHANNEL},${DIALSTATUS}'));
+		$ext->add($id, $c, '',new \ext_agi('missedcallnotify.php,${MCEXTTOCALL},,${EXTEN},${DB_EXISTS(AMPUSER/${EXTEN}/missedcall)},${DB(AMPUSER/${EXTEN}/missedcall)},${CHANNEL},${DIALSTATUS},${MCQUEUE}'));
 		$ext->add($id, $c, 'exit', new \ext_return());
 
 		// need to set an inheritable channel variable so the dialing extension is known at hangup
@@ -1134,6 +1143,7 @@ class Missedcall extends FreePBX_Helpers implements BMO {
 													<li><b>calleridname</b>: CallerID Name</li>
 													<li><b>datetime</b>: Date/Time</li>
 													<li><b>brand</b>: FreePBX</li>
+													<li><b>calltype</b>: Call Type</li>
 												</ul>
 											<b>Please enclose these variables with double curly braces {{VARIABLE_NAME}}</b>',
 						'label' => _('Mail Body'),

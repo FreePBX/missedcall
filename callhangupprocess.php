@@ -13,6 +13,8 @@ $freepbx = \FreePBX::Create();
 $json = json_decode(base64_decode($argv[1]),true);
 $McObj = $freepbx->Missedcall();
 $linkedid = $json['uniqueid'];
+	$queue = $json['queue'];
+	$ringgroup = $json['ringgroup'];
 	$data = $McObj->getallcalls($linkedid);
 	// get distinct to number and its status
 	$dialarray =  [];
@@ -41,15 +43,23 @@ $linkedid = $json['uniqueid'];
 				if ($dialsts['CallType'] && $mc_params['external']){
 					$send_notice = true;
 				}
-				if ($dialsts['CallType'] == 'ringgroup' && $mc_params['ringgroup']){
+				if ($dialsts['CallType'] == 'ringgroup' && $mc_params['ringgroup'] && $mc_params['external']){
 					$send_notice = true;
 				}
-				if ($dialsts['CallType'] == 'queue' && $mc_params['queue']){
+				if ($dialsts['CallType'] == 'queue' && $mc_params['queue'] && $mc_params['external']){
 					$send_notice = true;
+				}
+				// call type  
+				if($queue && $dialsts['CallType'] =='external') {
+					$calltype = 'External(Queue)';
+				} elseif ($ringgroup && $dialsts['CallType'] =='external'){
+					$calltype = 'External(Ringgroup))';
+				} else {
+					$calltype = $dialsts['CallType'];
 				}
 				// Send email now 
 				if($send_notice){
-					$McObj->sendEmail($mc_params['email'],$ext,$dialsts['callerid'],$dialsts['calleridname']);
+					$McObj->sendEmail($mc_params['email'],$ext,$dialsts['callerid'],$dialsts['calleridname'],$calltype);
 				}else { 
 					dbug(" No Email sent ");
 				}

@@ -39,7 +39,3 @@
 	<tbody>
 	</tbody>
 </table>
-
-<div class="alert alert-info text-center" role="alert">
-  <?php echo( _("If your extension is not present in the list, please go to 'user manager' module adding your email address.")) ?>
-</div>

@@ -4,9 +4,9 @@
 	 * echo FreePBX::create()->Missedcall->showPage();
 	 */
 	if (!defined('FREEPBX_IS_AUTH')) { die('No direct script access allowed'); }
-	$mcn 		= \FreePBX::create()->Missedcall;
-	$um 		= \FreePBX::create()->Userman;
-	$freepbx 		= \FreePBX::create();
+	$freepbx 	= \FreePBX::Create();
+	$mcn 		= $freepbx->Missedcall();
+	$um 		= $freepbx->Userman;
 
 	/**
 	 * License for all code of this FreePBX module can be found in the license file inside the module directory
@@ -17,7 +17,7 @@
 	$dispnum 	= 'missedcall'; //used for switch on config.php
 	$heading 	= '<i class="fa fa-envelope"></i> '._("Missed Call Notification");
 	$view 		= isset($request['view']) ? $request['view'] : '';
-
+	$emailLayout= false;
 	switch($view){
 		case "form":
 			$border = "full";
@@ -35,10 +35,9 @@
 		default:
 			$border 	= "no";
 			$content	= load_view(__DIR__.'/views/grid.php', array('error' => $error));
+			$emailLayout = $mcn->getMailSettingsForm();
 		break;
 	}
-	
-	$emailLayout = $mcn->getMailSettingsForm();
 
 ?>
 
@@ -52,18 +51,23 @@
 						<ul class="nav nav-tabs" role="tablist">
 							<li role="presentation" class="active">
 								<a href="#notiExtensions" aria-controls="notiExtensions" role="tab" data-toggle="tab" aria-expanded="true">
-									Extensions
+									<?php echo _('Extensions'); ?>
 								</a>
 							</li>
 							<li role="presentation" class="">
 								<a href="#emailSettings" aria-controls="emailSettings" role="tab" data-toggle="tab"
 									aria-expanded="false">
-									Email Settings
+									<?php echo _('Email Settings'); ?>
 								</a>
 							</li>
 						</ul>
 						<div class="tab-content">
-							<div role="tabpanel" id="notiExtensions" class="tab-pane display active">
+                            <div role="tabpanel" id="notiExtensions" class="tab-pane display active">
+								<div class="alert alert-warning text-center" role="alert" style="margin-bottom: 10px;margin-top: 10px;">
+									<?php
+									$link = '<a href="config.php?display=userman"> Userman </a>';
+									echo sprintf( _("Note : Email address is mandatory to enable the missed call notification. If extension is not listed here then please edit extension settings in %s and update the email address"),$link) ?>
+								</div>
 								<?php echo $content ?>
 							</div>
 							<div role="tabpanel" id="emailSettings" class="tab-pane display">

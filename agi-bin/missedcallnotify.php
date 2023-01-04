@@ -14,7 +14,7 @@
 
 	/**********************************************************************
 	 *            Sangoma Technologies Missed Call Notifications          *
-	 *                      Copyright (C) 2022                            *
+	 *                      Copyright (C) 2023                            *
 	 *                      Sangoma Technologies                          *
 	 *                                                                    *
 	 **********************************************************************/
@@ -30,19 +30,19 @@
 	$dialplanextdbvalue =  isset($argv['5'])?$argv['5']:'';
 	$curchannel =  isset($argv['6'])?$argv['6']:'';
 	$channeldialstatus =  isset($argv['7'])?$argv['7']:'';
-
+	$queuecall =  isset($argv['8'])?$argv['8']:'';
 	// Load FreePBX bootstrap environment
 	$restrict_mods = array('missedcall' => true);
 	if (!@include_once(getenv('FREEPBX_CONF') ? getenv('FREEPBX_CONF') : '/etc/freepbx.conf')) {
 		include_once('/etc/asterisk/freepbx.conf');
 	}
-
-	$mc = \FreePBX::Missedcall();
-	$asm = $mc->asm();
-	$um = \FreePBX::Userman();
-	$root = \FreePBX::Config()->get("AMPWEBROOT");
+	$freepbx = \FreePBX::Create();
+	$mc	 = $freepbx->Missedcall();
+	$asm 	 = $mc->asm();
+	$um      = $freepbx->Userman();
+	$root = $freepbx->Config()->get("AMPWEBROOT");
 	// set up AGI class
-	$agidir = FreePBX::Config()->get('ASTAGIDIR');
+	$agidir =  $freepbx->Config()->get('ASTAGIDIR');
 	require_once $agidir."/phpagi.php";
 	$agi = new AGI();
 
@@ -54,7 +54,7 @@
 	}
 	*/
 
-	if (!$extension) {
+	if (!$extension &&  $queuecall == "" ) {
 		log_write("As a minimum this script requires extension or 's' as argument");
 		exit;
 	}
@@ -80,7 +80,7 @@
 	if ($enabled && $extension != 's') {
 		switch ($enabled) {
 			case "enable":
-				$foo = $mc->Enable($extension);
+				$foo = $mc->misscallEnable($extension);
 				$agi->answer();
 				$agi->stream_file("missed");
 				$agi->stream_file("call");
@@ -89,7 +89,7 @@
 				log_write("Missed call notify for $extension set to enable");
 			break;
 			case "disable":
-				$foo = $mc->Disable($extension);
+				$foo = $mc->misscallDisable($extension);
 				$agi->answer();
 				$agi->stream_file("missed");
 				$agi->stream_file("call");
@@ -129,7 +129,7 @@
 	$mc_params = $mc->get($extension);
 
 	// if notifications are disabled for ringing extension, can exit immediately
-	if (!$mc_params['enable']) {
+	if (!$mc_params['enable']  &&  $queuecall == "") {
 		log_write("Notifications disabled for $extension, exiting");
 		exit;
 	}
@@ -202,7 +202,7 @@
 	}
 
 	// determine if call is internal
-	$ampusers = FreePBX::Missedcall()->getUsers();
+	$ampusers = $mc->getUsers();
 	if (in_array($mcexten, $ampusers)) {
 		$call_type = "internal";
 		$internal = true;
@@ -281,6 +281,8 @@
 	// if the linkedid and uniqueid are same then its the channel who orginated the call. So we can sent the finaly missed call report
 	if($linkedid == $uniqueid){
 		log_write("Uniqueid and Linkedid  Processing  uniqueid = $uniqueid");
+		$input['ringgroup'] = $ringgroup;
+		$input['queue'] = $queue;
 		$input['uniqueid'] = $uniqueid;
 		$arg = escapeshellarg(base64_encode(json_encode($input)));
 		dbug($root."/admin/modules/missedcall/callhangupprocess.php ".$arg." > /dev/null 2>&1 &");

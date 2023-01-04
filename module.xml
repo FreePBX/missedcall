@@ -6,7 +6,7 @@
 	<license>GPLv3+</license>
 	<licenselink>https://www.gnu.org/licenses/gpl-3.0.txt</licenselink>
 	<repo>standard</repo>
-	<more-info>https://wiki.freepbx.org/display/FPG/Parking+Module</more-info>
+	<more-info>https://wiki.freepbx.org/display/FPG/MissedCall</more-info>
 	<menuitems>
 		<missedcall>Missed Call Notification</missedcall>
 	</menuitems>
@@ -66,6 +66,11 @@
 			<field name="dialstatus" type="string"  length="50" notnull="false"/>
 			<field name="channel" type="string"  length="200" notnull="false"/>
 			<field name="chan_orgin_from" type="string"  length="100" notnull="false"/>
+		</table>
+		<table name="missedcall_email_templates">
+			<field name="name" type="string" length="20" primarykey="true"/>
+			<field name="time" type="integer" default="0"/>
+			<field name="templateContent" type="blob" notnull="false"/>
 		</table>
 	</database>
 </module>
