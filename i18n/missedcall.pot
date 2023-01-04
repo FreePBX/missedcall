@@ -1,0 +1,167 @@
+# This file is part of FreePBX.
+#
+# For licensing information, please see the file named LICENSE located in the module directory
+#
+# FreePBX language template for missedcall
+# Copyright (C) 2008-2020 Sangoma Technologies, Inc.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-06-03 12:27-0500\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "Applications"
+msgstr ""
+
+msgid "Are missed call notifications enabled for this extension?"
+msgstr ""
+
+msgid "Calls from Follow Me"
+msgstr ""
+
+msgid "Calls from Queues"
+msgstr ""
+
+msgid "Calls from Ring Groups"
+msgstr ""
+
+msgid "Creating tables..."
+msgstr ""
+
+msgid "Delete"
+msgstr ""
+
+msgid "E-Mail"
+msgstr ""
+
+msgid "Enable"
+msgstr ""
+
+msgid "Enable missed call notifications for missed calls from queues"
+msgstr ""
+
+msgid "Enable missed call notifications for missed calls from ring groups"
+msgstr ""
+
+msgid "Enable missed call notifications for missed external calls"
+msgstr ""
+
+msgid "Enable missed call notifications for missed internal calls"
+msgstr ""
+
+msgid "Enabled"
+msgstr ""
+
+msgid "Enabled:"
+msgstr ""
+
+msgid "Extension"
+msgstr ""
+
+msgid "External Calls"
+msgstr ""
+
+msgid "Follow Me Calls"
+msgstr ""
+
+msgid "Global enable/disable for missed call notifications."
+msgstr ""
+
+#, php-format
+msgid ""
+"Incoming call to extension %s was not answered. CallerID Number: %s CallerID "
+"Name: %s Date/Time: %s"
+msgstr ""
+
+msgid "Internal Calls"
+msgstr ""
+
+msgid ""
+"Invalid CID Number. Must be in a format of digits only with an option of "
+"E164 format using a leading \"+\""
+msgstr ""
+
+msgid "Invalid time specified"
+msgstr ""
+
+msgid "List Notifications"
+msgstr ""
+
+msgid "Missed Call Notification"
+msgstr ""
+
+msgid "Missed Call Notification Updated."
+msgstr ""
+
+msgid "Missed Call Notifications"
+msgstr ""
+
+#, php-format
+msgid "Missed call from %s"
+msgstr ""
+
+msgid "No"
+msgstr ""
+
+msgid ""
+"Only ringall, ringallv2, hunt and the respective -prim versions are "
+"supported when confirmation is checked"
+msgstr ""
+
+msgid "Please enter an extension list."
+msgstr ""
+
+msgid "Queue Calls"
+msgstr ""
+
+msgid "Removing the database table"
+msgstr ""
+
+msgid "Reset"
+msgstr ""
+
+msgid "Ring Group Calls"
+msgstr ""
+
+msgid "Send email notifications to users when a call is missed"
+msgstr ""
+
+msgid "Something went wrong"
+msgstr ""
+
+msgid "Submit"
+msgstr ""
+
+msgid "Table Created"
+msgstr ""
+
+msgid "Table Deleted"
+msgstr ""
+
+msgid "Time must be between 1 and 60 seconds"
+msgstr ""
+
+msgid "Toggle to receive missed call notifications for external calls."
+msgstr ""
+
+msgid "Toggle to receive missed call notifications for follow me calls."
+msgstr ""
+
+msgid "Toggle to receive missed call notifications for internal calls."
+msgstr ""
+
+msgid "Toggle to receive missed call notifications for queue calls."
+msgstr ""
+
+msgid "Toggle to receive missed call notifications for ring group calls."
+msgstr ""
+
+msgid "Yes"
+msgstr ""

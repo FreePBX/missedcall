@@ -1,0 +1,71 @@
+<module>
+	<rawname>missedcall</rawname>
+	<name>Missed Call Notification</name>
+	<version>16.0.0</version>
+	<publisher>Sangoma Technologies Corporation</publisher>
+	<license>GPLv3+</license>
+	<licenselink>https://www.gnu.org/licenses/gpl-3.0.txt</licenselink>
+	<repo>standard</repo>
+	<more-info>https://wiki.freepbx.org/display/FPG/Parking+Module</more-info>
+	<menuitems>
+		<missedcall>Missed Call Notification</missedcall>
+	</menuitems>
+	<changelog>
+		*16.0.0* Initial release for 16.0 
+	</changelog>
+	<description>Send email notifications to users when a call is missed</description>
+	<category>Applications</category>
+	<supported>
+		<version>16.0</version>
+	</supported>
+	<depends>
+		<phpversion>7.4</phpversion>
+		<module>framework ge 16.0.30</module>
+		<module>core ge 16.0.65.4</module>
+		<module>userman ge 16.0.35.2</module>
+	</depends>
+	<hooks>
+		<ucp class="Ucp">
+			<method namespace="FreePBX\Modules" class="Missedcall" callingMethod="constructModuleConfigPages">ucpConfigPage</method>
+			<method namespace="FreePBX\Modules" class="Missedcall" callingMethod="addUser">ucpAddUser</method>
+			<method namespace="FreePBX\Modules" class="Missedcall" callingMethod="updateUser">ucpUpdateUser</method>
+			<method namespace="FreePBX\Modules" class="Missedcall" callingMethod="delUser">ucpDelUser</method>
+			<method namespace="FreePBX\Modules" class="Missedcall" callingMethod="addGroup">ucpAddGroup</method>
+			<method namespace="FreePBX\Modules" class="Missedcall" callingMethod="updateGroup">ucpUpdateGroup</method>
+			<method namespace="FreePBX\Modules" class="Missedcall" callingMethod="delGroup">ucpDelGroup</method>
+		</ucp>
+		<userman class="Userman" namespace="FreePBX\modules">
+			<method namespace="FreePBX\modules" class="Missedcall" callingMethod="delGroup">usermanDelGroup</method>
+			<method namespace="FreePBX\modules" class="Missedcall" callingMethod="addGroup">usermanAddGroup</method>
+			<method namespace="FreePBX\modules" class="Missedcall" callingMethod="updateGroup">usermanUpdateGroup</method>
+			<method namespace="FreePBX\modules" class="Missedcall" callingMethod="myShowPage">usermanShowPage</method>
+			<method namespace="FreePBX\modules" class="Missedcall" callingMethod="delUser">usermanDelUser</method>
+			<method namespace="FreePBX\modules" class="Missedcall" callingMethod="addUser">usermanAddUser</method>
+			<method namespace="FreePBX\modules" class="Missedcall" callingMethod="updateUser">usermanUpdateUser</method>
+		</userman>
+	</hooks>
+	<database name="asterisk">
+		<table name="missedcall">
+			<field name="extension" type="string" length="50"/>
+			<field name="queue" type="smallint" notnull="false"/>
+			<field name="ringgroup" type="smallint" notnull="false"/>
+			<field name="internal" type="smallint" notnull="false"/>
+			<field name="external" type="smallint" notnull="false"/>
+			<key name="extension" type="unique">
+				<column name="extension"/>
+			</key>
+		</table>
+		<table name="missedcalllog">
+			<field name="id" type="integer" primarykey="true" autoincrement="true" />
+			<field name="callerid" type="string" length="50" notnull="false"/>
+			<field name="calleridname" type="string" length="100" notnull="false"/>
+			<field name="destination" type="string"  length="50"  notnull="false"/>
+			<field name="Call_type" type="string"  length="50" notnull="false"/>
+			<field name="uniqueid" type="string"  length="100" notnull="false"/>
+			<field name="linkedid" type="string"  length="100" notnull="false"/>
+			<field name="dialstatus" type="string"  length="50" notnull="false"/>
+			<field name="channel" type="string"  length="200" notnull="false"/>
+			<field name="chan_orgin_from" type="string"  length="100" notnull="false"/>
+		</table>
+	</database>
+</module>
