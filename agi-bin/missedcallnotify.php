@@ -14,7 +14,7 @@
 
 	/**********************************************************************
 	 *            Sangoma Technologies Missed Call Notifications          *
-	 *                      Copyright (C) 2022                            *
+	 *                      Copyright (C) 2023                            *
 	 *                      Sangoma Technologies                          *
 	 *                                                                    *
 	 **********************************************************************/
@@ -37,12 +37,14 @@
 		include_once('/etc/asterisk/freepbx.conf');
 	}
 
-	$mc = \FreePBX::Missedcall();
-	$asm = $mc->asm();
-	$um = \FreePBX::Userman();
-	$root = \FreePBX::Config()->get("AMPWEBROOT");
+	$freepbx = \FreePBX::Create();
+	$mc	 = $freepbx->Missedcall();
+	$asm 	 = $mc->asm();
+	$um      = $freepbx->Userman();
+
+	$root = $freepbx->Config()->get("AMPWEBROOT");
 	// set up AGI class
-	$agidir = FreePBX::Config()->get('ASTAGIDIR');
+	$agidir = $freepbx->Config()->get('ASTAGIDIR');
 	require_once $agidir."/phpagi.php";
 	$agi = new AGI();
 
@@ -202,7 +204,7 @@
 	}
 
 	// determine if call is internal
-	$ampusers = FreePBX::Missedcall()->getUsers();
+	$ampusers = $mc->getUsers();
 	if (in_array($mcexten, $ampusers)) {
 		$call_type = "internal";
 		$internal = true;

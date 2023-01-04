@@ -4,9 +4,9 @@
 	 * echo FreePBX::create()->Missedcall->showPage();
 	 */
 	if (!defined('FREEPBX_IS_AUTH')) { die('No direct script access allowed'); }
-	$mcn 		= \FreePBX::create()->Missedcall;
-	$um 		= \FreePBX::create()->Userman;
-	$freepbx 		= \FreePBX::create();
+	$freepbx 	= \FreePBX::Create();
+	$mcn 		= $freepbx->Missedcall();
+	$um 		= $freepbx->Userman();
 
 	/**
 	 * License for all code of this FreePBX module can be found in the license file inside the module directory
@@ -52,13 +52,13 @@
 						<ul class="nav nav-tabs" role="tablist">
 							<li role="presentation" class="active">
 								<a href="#notiExtensions" aria-controls="notiExtensions" role="tab" data-toggle="tab" aria-expanded="true">
-									Extensions
+									<?php echo _('Extensions'); ?>
 								</a>
 							</li>
 							<li role="presentation" class="">
 								<a href="#emailSettings" aria-controls="emailSettings" role="tab" data-toggle="tab"
 									aria-expanded="false">
-									Email Settings
+									<?php echo _('Email Settings'); ?>
 								</a>
 							</li>
 						</ul>
