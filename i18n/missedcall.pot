@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-06 03:10+0000\n"
+"POT-Creation-Date: 2023-01-09 13:00+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -51,7 +51,7 @@ msgstr ""
 msgid "Calls from Ring Groups"
 msgstr ""
 
-#: Missedcall.class.php:162
+#: Missedcall.class.php:171
 msgid "Delete"
 msgstr ""
 
@@ -70,23 +70,23 @@ msgstr ""
 msgid "Email"
 msgstr ""
 
-#: page.missedcall.php:61
+#: page.missedcall.php:60
 msgid "Email Settings"
 msgstr ""
 
-#: Missedcall.class.php:1088
+#: Missedcall.class.php:1097
 msgid "Email body is required"
 msgstr ""
 
-#: Missedcall.class.php:1100
+#: Missedcall.class.php:1109
 msgid "Email settings saved successfully"
 msgstr ""
 
-#: Missedcall.class.php:1084
+#: Missedcall.class.php:1093
 msgid "Email subject is required"
 msgstr ""
 
-#: Missedcall.class.php:1078
+#: Missedcall.class.php:1087
 msgid "Email type is required"
 msgstr ""
 
@@ -147,7 +147,7 @@ msgstr ""
 msgid "Extension"
 msgstr ""
 
-#: page.missedcall.php:55
+#: page.missedcall.php:54
 msgid "Extensions"
 msgstr ""
 
@@ -158,12 +158,6 @@ msgstr ""
 #: ucp/views/widget.php:12
 #: views/form.php:82
 msgid "External Calls"
-msgstr ""
-
-#: views/grid.php:44
-msgid ""
-"If your extension is not present in the list, please go to 'user manager' "
-"module adding your email address."
 msgstr ""
 
 #: views/missedcall.php:21
@@ -196,28 +190,28 @@ msgstr ""
 msgid "List Notifications"
 msgstr ""
 
-#: Missedcall.class.php:1139
+#: Missedcall.class.php:1149
 msgid "Mail Body"
 msgstr ""
 
-#: Missedcall.class.php:1126
+#: Missedcall.class.php:1135
 msgid "Mail Subject"
 msgstr ""
 
-#: Missedcall.class.php:1115
-#: Missedcall.class.php:1116
+#: Missedcall.class.php:1124
+#: Missedcall.class.php:1125
 msgid "Mail Type"
 msgstr ""
 
-#: Missedcall.class.php:309
-#: Missedcall.class.php:324
-#: Missedcall.class.php:509
+#: Missedcall.class.php:318
+#: Missedcall.class.php:333
+#: Missedcall.class.php:518
 #: ucp/Missedcall.class.php:64
 #: ucp/Missedcall.class.php:132
 msgid "Missed Call"
 msgstr ""
 
-#: Missedcall.class.php:107
+#: Missedcall.class.php:115
 #: page.missedcall.php:18
 #: views/default.php:2
 msgid "Missed Call Notification"
@@ -243,6 +237,14 @@ msgstr ""
 #: views/ucp_config.php:15
 #: assets/js/missedcall.js:187
 msgid "No"
+msgstr ""
+
+#: page.missedcall.php:69
+#, php-format
+msgid ""
+"Note : Email address is mandatory to enable the missed call notification. If "
+"extension is not listed here then please edit extension settings in %s and "
+"update the email address"
 msgstr ""
 
 #: ucp/views/widget.php:5
@@ -283,7 +285,7 @@ msgstr ""
 msgid "Removing the database table"
 msgstr ""
 
-#: Missedcall.class.php:167
+#: Missedcall.class.php:176
 msgid "Reset"
 msgstr ""
 
@@ -295,7 +297,7 @@ msgstr ""
 msgid "Ring Group Calls"
 msgstr ""
 
-#: page.missedcall.php:77
+#: page.missedcall.php:81
 msgid "Save Email Settings"
 msgstr ""
 
@@ -307,12 +309,12 @@ msgstr ""
 msgid "Something went wrong"
 msgstr ""
 
-#: Missedcall.class.php:172
+#: Missedcall.class.php:181
 msgid "Submit"
 msgstr ""
 
-#: Missedcall.class.php:227
-#: Missedcall.class.php:232
+#: Missedcall.class.php:236
+#: Missedcall.class.php:241
 msgid "Success."
 msgstr ""
 
@@ -320,19 +322,19 @@ msgstr ""
 msgid "Table Deleted"
 msgstr ""
 
-#: Missedcall.class.php:1131
+#: Missedcall.class.php:1140
 msgid ""
 "Text to be used for the body of the Missed call notification email. Pre-"
 "defined variables are:"
 msgstr ""
 
-#: Missedcall.class.php:1121
+#: Missedcall.class.php:1130
 msgid ""
 "Text to be used for the subject of the Missed call notification email. Pre-"
 "defined variables are:"
 msgstr ""
 
-#: Missedcall.class.php:196
+#: Missedcall.class.php:205
 msgid ""
 "The user's email address is required. Because missed call notification is "
 "enabled. Please disable it and try again."
@@ -352,7 +354,7 @@ msgstr ""
 msgid "Time must be between 1 and 60 seconds"
 msgstr ""
 
-#: Missedcall.class.php:234
+#: Missedcall.class.php:243
 msgid "Unknown Status."
 msgstr ""
 
