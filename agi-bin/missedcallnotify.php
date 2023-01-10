@@ -274,6 +274,7 @@
 				$channeldialstatus ="MISSED";
 			}
 		}
+		$extension = $mc->getDeviceUser($extension);
 		$q = "INSERT INTO missedcalllog (`callerid`,`calleridname`,`destination`,`call_type`,`uniqueid`,`linkedid`,`channel`,`dialstatus`,`chan_orgin_from`) VALUES('$mcexten','$mcname','$extension','$call_type','$uniqueid','$linkedid','$curchannel','$channeldialstatus','$chan_orgin_from')";
 		$db->query($q);
 	}
