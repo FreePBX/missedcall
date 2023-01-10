@@ -93,6 +93,15 @@ class Missedcall extends FreePBX_Helpers implements BMO {
 			$stmt->execute();
 		}
 	}
+
+	public function getDeviceUser($ext){
+		$query = "select `user` from devices WHERE `id`= '$ext'";
+		$stmt = $this->db->prepare($query);
+		$stmt->execute();
+		$data = $stmt->fetch(\PDO::FETCH_ASSOC);
+		return isset($data['user'])?$data['user']:$ext;
+	}
+
 	// fetchall call belong to given linkedid
 	public function getallcalls($linkedid){
 		$query = "SELECT * FROM missedcalllog WHERE linkedid= '$linkedid'";
