@@ -23,7 +23,8 @@ $linkedid = $json['uniqueid'];
 		$status = $dial['dialstatus'];
 		if($status =="MISSED"){
 			$dialarray[$ext]['MISSED'] = true;
-			$dialarray[$ext]['CallType'] = $dial['chan_orgin_from'];
+			$dialarray[$ext]['CallType'] = $dial['Call_type'];
+			$dialarray[$ext]['call_origin'] = $dial['chan_orgin_from'];
 			$dialarray[$ext]['callerid'] = $dial['callerid'];
 			$dialarray[$ext]['calleridname'] = $dial['calleridname'];
 		}
@@ -37,16 +38,17 @@ $linkedid = $json['uniqueid'];
 			// check notifiation enabled or not  and send email
 			$mc_params = $McObj->get($ext);
 			if($mc_params['enable']){// check only enable extension
-				if ($dialsts['CallType'] == 'Internal' && $mc_params['internal']){
+				if ($dialsts['call_origin'] == 'Internal' && $mc_params['internal']){
 					$send_notice = true;
 				}
-				if ($dialsts['CallType'] && $mc_params['external']){
+				// this should be from direct external
+				if ($dialsts['call_origin'] =='external' && $mc_params['external'] ){
 					$send_notice = true;
 				}
-				if ($dialsts['CallType'] == 'ringgroup' && $mc_params['ringgroup'] && $mc_params['external']){
+				if ($dialsts['call_origin'] == 'ringgroup' && $mc_params['ringgroup'] ){
 					$send_notice = true;
 				}
-				if ($dialsts['CallType'] == 'queue' && $mc_params['queue'] && $mc_params['external']){
+				if ($dialsts['call_origin'] == 'queue' && $mc_params['queue']){
 					$send_notice = true;
 				}
 				// call type  

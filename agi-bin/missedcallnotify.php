@@ -36,6 +36,8 @@
 	if (!@include_once(getenv('FREEPBX_CONF') ? getenv('FREEPBX_CONF') : '/etc/freepbx.conf')) {
 		include_once('/etc/asterisk/freepbx.conf');
 	}
+	$queue = false;
+	$ringgroup = false;
 	$freepbx = \FreePBX::Create();
 	$mc	 = $freepbx->Missedcall();
 	$asm 	 = $mc->asm();
@@ -244,28 +246,19 @@
 	log_write("From name: ".$fr_name);
 	$agi->set_variable('MASTER_CHANNEL(MC-'.$uid.')',1);
 
-	// determine if notification should be sent
-	if ($internal && $mc_params['internal']){
+	if ($internal){
 		$chan_orgin_from = "Internal";
-		$send_notice = true;
 	}
-	if ($external && $mc_params['external']){
+	if ($external){
 		$chan_orgin_from = "external";
-		$send_notice = true;
 	}
-	if ($ringgroup && !$mc_params['ringgroup']){
+	if ($ringgroup){
 		$chan_orgin_from = "ringgroup";
-		$send_notice = false;
 	}
-	if ($queue && !$mc_params['queue']){
+	if ($queue){
 		$chan_orgin_from = "queue";
-		$send_notice = false;
 	}
-	/*
-	if ($followme && !$mc_params['followme']){
-		$send_notice = false;
-	}
-	*/
+
 
 	if($linkedid != $uniqueid){
 		if($channeldialstatus ==""){// No dial status then it considered as missed
