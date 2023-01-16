@@ -284,10 +284,10 @@ class Missedcall extends FreePBX_Helpers implements BMO {
 					$mcq  		= $this->userman->getCombinedModuleSettingByID($user['id'],'missedcall','mcq', false, true);
 					$mcrg		= $this->userman->getCombinedModuleSettingByID($user['id'],'missedcall','mcrg',false, true);			
 
-					$internal 	= $mc_params['internal'] == "1"  	? '<i class="fa fa-circle text-success"></i>' : '<i class="fa fa-times-circle text-danger"></i>' ;
-					$external	= $mc_params['external'] == "1" 	? '<i class="fa fa-circle text-success"></i>' : '<i class="fa fa-times-circle text-danger"></i>' ;
-					$queue 		= $mc_params['queue'] 	 == "1" 	? '<i class="fa fa-circle text-success"></i>' : '<i class="fa fa-times-circle text-danger"></i>' ;
-					$ringgroup 	= $mc_params['ringgroup']== "1" 	? '<i class="fa fa-circle text-success"></i>' : '<i class="fa fa-times-circle text-danger"></i>' ;
+					$internal 	= $mc_params['internal'] == "1"  	? '<i class="fa fa-check-circle text-success"></i>' : '<i class="fa fa-times-circle text-danger"></i>' ;
+					$external	= $mc_params['external'] == "1" 	? '<i class="fa fa-check-circle text-success"></i>' : '<i class="fa fa-times-circle text-danger"></i>' ;
+					$queue 		= $mc_params['queue'] 	 == "1" 	? '<i class="fa fa-check-circle text-success"></i>' : '<i class="fa fa-times-circle text-danger"></i>' ;
+					$ringgroup 	= $mc_params['ringgroup']== "1" 	? '<i class="fa fa-check-circle text-success"></i>' : '<i class="fa fa-times-circle text-danger"></i>' ;
 					$queue		= $mcq 					 == "1"		? $queue								 : '<i class="fa fa-ban"></i>'		;
 					$ringgroup	= $mcrg 				 == "1"		? $ringgroup							 : '<i class="fa fa-ban"></i>'		;
 					$details	= [ "ext" => $ext, "enabled" => $this->getStatus($ext), "email" => $mc_params['email'] ];
