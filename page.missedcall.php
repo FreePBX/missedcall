@@ -49,6 +49,7 @@
     $box_info_description .= "<p>" . _("For more information see: ") . "<a href='https://wiki.sangoma.com/display/FPG' target='_blank'>https://wiki.sangoma.com/display/FPG</a> </p>";
     echo show_help($box_info_description, sprintf(_('What is Missed Call Notification ?')), false, true, "info");
     unset($box_info_description);
+	if($view != 'form'){
     ?>
 	<div class="row">
 		<div class="col-sm-12">
@@ -98,4 +99,17 @@
 			</div>
 		</div>
 	</div>
+	<?php }else{
+	?>
+	<div class="row">
+		<div class="col-sm-12">
+			<div class="fpbx-container">
+				<div class="display <?php echo $border?>-border">
+					<?= $content; ?>
+				</div>
+			</div>
+		</div>
+	</div>
+	<?php
+	} ?>
 </div>
