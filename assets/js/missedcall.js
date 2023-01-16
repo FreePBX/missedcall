@@ -30,12 +30,48 @@ $('#table').bootstrapTable({
 })
 
 $("#bulkyes").click(function (){
-	saveSelected("enable");
+	var chosen = $(`#table`).bootstrapTable("getSelections");
+	let notEnabled = 0;
+	Object.keys(chosen).forEach(key => {
+		if (!chosen[key].status.enabled) {
+			notEnabled++;
+		}
+	});
+	if (notEnabled > 0) {
+		// Open confirmation modal
+		fpbxConfirm(
+			sprintf(_(`Are you sure you wish to enable missed call notification for %s users?`), notEnabled),
+			_("Yes"), _("No"),
+			function () {
+				saveSelected("enable");
+			}
+		);
+	} else {
+		fpbxToast(_('Missed call notification is already enabled'), _('Error'), 'error');
+	}
 	$(".bulk").prop("disabled", true);
 })
 
 $("#bulkno").click(function (){
-	saveSelected("disable");
+	var chosen = $(`#table`).bootstrapTable("getSelections");
+	let enabledUsers = 0;
+	Object.keys(chosen).forEach(key => {
+		if (chosen[key].status.enabled) {
+			enabledUsers++;
+		}
+	});
+	if (enabledUsers > 0) {
+		// Open confirmation modal
+		fpbxConfirm(
+			sprintf(_(`Are you sure you wish to disable missed call notification for %s users?`), enabledUsers),
+			_("Yes"), _("No"),
+			function () {
+				saveSelected("disable");
+			}
+		);
+	} else {
+		fpbxToast(_('Missed call notification is already disabled'), _('Error'), 'error');
+	}
 	$(".bulk").prop("disabled", true);
 })
 
@@ -118,8 +154,19 @@ function mctoggle(ext){
 	}else{
 		mcstate = "disable";
 	}
-	$.get("ajax.php?module=missedcall&command=toggleMC&extdisplay="+ext+"&state="+mcstate);
-	fpbxToast('Notification for '+ext +' '+mcstate+'d');
+	// Open confirmation modal
+	fpbxConfirm(
+		sprintf(_(`Are you sure you wish to %s missed call notification for this users?`), mcstate),
+		_("Yes"), _("No"),
+		function () {
+			$.get("ajax.php?module=missedcall&command=toggleMC&extdisplay=" + ext + "&state=" + mcstate)
+				.done(function () {
+					$("#table").bootstrapTable("refresh");
+					fpbxToast('Notification for ' + ext + ' ' + mcstate + 'd');
+				});
+		}
+	);
+	$("#table").bootstrapTable("refresh");
 }
 
 function checkGRP(theForm) {
