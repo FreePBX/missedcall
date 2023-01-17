@@ -15,29 +15,29 @@
 			<i class="fa fa-times-circle"></i> <span><?php echo _('Disable') ?></span>
 		</button>
 	</div>
-	<table
-		id="table" 
-		data-url="ajax.php?module=missedcall&amp;command=get_status" 
-		data-toolbar="#toolbar" 
-		data-show-refresh="true" 
-		data-show-columns="true" 
-		data-toggle="table" 
-		data-pagination="true" 
-		data-search="true" 
-		class="table table-striped">
-		<thead>
-			<tr>
-				<th data-field="state" data-checkbox="true"></th>
-				<th data-width="150" data-formatter="extensionformatter" data-sortable="true" data-field="extension"><?php echo _("Extension")?></th>			
-				<th data-field="email"><?php echo _("Email")?></th>
-				<th data-width="50" data-align="center" data-field="internal"><?php echo _("Internal")?></th>
-				<th data-width="50" data-align="center" data-field="external"><?php echo _("External")?></th>
-				<th data-width="50" data-align="center" data-field="queue"><?php echo _("Queue")?></th>
-				<th data-width="50" data-align="center" data-field="ringgroup"><?php echo _("Ring Group")?></th>
-				<th data-width="150" data-align="center" data-formatter="enabledformatter" data-field="status"><?php echo _("Enabled")?></th>
-			</tr>
-		</thead>
-		<tbody>
-		</tbody>
-	</table>
-</div>
+<table
+	id="table" 
+	data-url="ajax.php?module=missedcall&amp;command=get_status" 
+	data-toolbar="#toolbar" 
+	data-show-refresh="true" 
+	data-show-columns="true" 
+	data-toggle="table" 
+	data-pagination="true" 
+	data-search="true" 
+	class="table table-striped">
+	<thead>
+		<tr>
+			<th data-field="state" data-checkbox="true"></th>
+			<th data-width="150"  data-sortable="true" data-field="username"><?php echo _("Username")?></th>			
+			<th data-width="150" data-formatter="editformatter" data-sortable="true" data-field="extension"><?php echo _("Extension")?></th>
+			<th data-field="email"><?php echo _("Email")?></th>
+			<th data-width="50" data-align="center" data-field="internal"><?php echo _("Internal")?></th>
+			<th data-width="50" data-align="center" data-field="external"><?php echo _("External")?></th>
+			<th data-width="50" data-align="center" data-field="queue"><?php echo _("Queue")?></th>
+			<th data-width="50" data-align="center" data-field="ringgroup"><?php echo _("Ring Group")?></th>
+			<th data-width="150" data-align="center" data-formatter="enabledformatter" data-field="status"><?php echo _("Enabled")?></th>
+		</tr>
+	</thead>
+	<tbody>
+	</tbody>
+</table>

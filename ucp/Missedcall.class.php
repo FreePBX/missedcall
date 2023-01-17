@@ -214,7 +214,7 @@ class Missedcall extends Modules {
 						}
 					}
 
-					$this->mc->updateOne($ext,$type,$val);
+					$this->mc->updateOne($ext,$type,$val,$user['id']);
 					return array("status" => true, "alert" => "success", "message" => _('Saved'));
 				}
 				return array("status" => false, "alert" => "Error", "message" => sprintf( _("Bad extension: '%s'!"), $ext));

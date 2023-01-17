@@ -21,12 +21,14 @@
 	switch($view){
 		case "form":
 			$border = "full";
-			if($request['extdisplay'] != ''){
-				$heading 		.= ": Edit ".ltrim($request['extdisplay'],'GRP-');
-				$user 	  		 = $um->getUserByDefaultExtension($request["extdisplay"]);
+			if($request['userid'] != ''){
+				$heading 		.= ": Edit ".ltrim($request['userid'],'GRP-');
+				$user 	  		 = $um->getUserByID($request["userid"]);
 				$request["mcrg"] = $um->getCombinedModuleSettingByID($user['id'],'missedcall','mcrg',false, true);
 				$request["mcq"]  = $um->getCombinedModuleSettingByID($user['id'],'missedcall','mcq', false, true);
-
+				$request['internal'] = $um->getCombinedModuleSettingByID($user['id'],'missedcall','mci');
+				$request['external'] = $um->getCombinedModuleSettingByID($user['id'],'missedcall','mcx');
+		
 				$content = load_view(__DIR__.'/views/form.php', array('request' => $request));
 			}else{
 				$content = load_view(__DIR__.'/views/grid.php', array('error' => $error));

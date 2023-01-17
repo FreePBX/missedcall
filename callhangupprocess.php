@@ -36,7 +36,7 @@ $linkedid = $json['uniqueid'];
 		$send_notice = false;
 		if(!isset($dialsts['ANSWER']) && isset($dialsts['MISSED']) ){
 			// check notifiation enabled or not  and send email
-			$mc_params = $McObj->get($ext);
+			$mc_params = $McObj->get($ext,'byEXT');
 			if($mc_params['enable']){// check only enable extension
 				if ($dialsts['call_origin'] == 'Internal' && $mc_params['internal']){
 					$send_notice = true;

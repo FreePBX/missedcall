@@ -46,6 +46,8 @@
 	</hooks>
 	<database name="asterisk">
 		<table name="missedcall">
+			<field name="userid" type="integer" primarykey="true" />
+			<field name="notification" type="smallint" default="0" notnull="false" />
 			<field name="extension" type="string" length="50"/>
 			<field name="queue" type="smallint" notnull="false"/>
 			<field name="ringgroup" type="smallint" notnull="false"/>
