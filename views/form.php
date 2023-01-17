@@ -1,6 +1,7 @@
 <?php
-	$mc_ext =  $_GET['extdisplay'];
-	$mc_params = FreePBX::Missedcall()->get($mc_ext);
+	$userid =  $_GET['userid'];
+	$mc_params = FreePBX::Missedcall()->get($userid);
+	$extension = $mc_params['extension'];
 
 	$rgstatus = "";
 	if($request["mcrg"] == "0" || empty($request["mcrg"]) ){
@@ -13,38 +14,49 @@
 		$mc_params['queue'] = false;
 		$qstatus = "disabled";
 	}
+	$instatus = "";
+	if($request["internal"] == "0" || empty($request["internal"]) ){	
+		$mc_params['internal'] = false;
+		$instatus = "disabled";
+	}
+	$exstatus = "";
+	if($request["external"] == "0" || empty($request["external"]) ){	
+		$mc_params['external'] = false;
+		$exstatus = "disabled";
+	}
 
 	$internal = '<span class="radioset">';
-	$internal .= '<input type="radio" name="mcinternal" id="mcinternal'.$mc_ext.'yes" '.($mc_params['internal'] == true?'CHECKED':'').' value="1">';
-	$internal .= '<label for="mcinternal'.$mc_ext.'yes">'._("Yes").'</label>';
-	$internal .= '<input type="radio" name="mcinternal" id="mcinternal'.$mc_ext.'no" '.($mc_params['internal'] == true?'':'CHECKED' ).' value="0">';
-	$internal .= '<label for="mcinternal'.$mc_ext.'no">'._("No").'</label>';
+	$internal .= '<input  '.$instatus.' type="radio" name="mcinternal" id="mcinternal'.$userid.'yes" '.($mc_params['internal'] == true?'CHECKED':'').' value="1">';
+	$internal .= '<label for="mcinternal'.$userid.'yes">'._("Yes").'</label>';
+	$internal .= '<input  '.$instatus.' type="radio" name="mcinternal" id="mcinternal'.$userid.'no" '.($mc_params['internal'] == true?'':'CHECKED' ).' value="0">';
+	$internal .= '<label for="mcinternal'.$userid.'no">'._("No").'</label>';
 	$internal .= '</span>';
 
 	$external = '<span class="radioset">';
-	$external .= '<input type="radio" name="mcexternal" id="mcexternal'.$mc_ext.'yes" '.($mc_params['external'] == true?'CHECKED':'').' value="1">';
-	$external .= '<label for="mcexternal'.$mc_ext.'yes">'._("Yes").'</label>';
-	$external .= '<input type="radio" name="mcexternal" id="mcexternal'.$mc_ext.'no" '.($mc_params['external'] == true?'':'CHECKED' ).' value="0">';
-	$external .= '<label for="mcexternal'.$mc_ext.'no">'._("No").'</label>';
+	$external .= '<input '.$exstatus.' type="radio" name="mcexternal" id="mcexternal'.$userid.'yes" '.($mc_params['external'] == true?'CHECKED':'').' value="1">';
+	$external .= '<label for="mcexternal'.$userid.'yes">'._("Yes").'</label>';
+	$external .= '<input  '.$exstatus.' type="radio" name="mcexternal" id="mcexternal'.$userid.'no" '.($mc_params['external'] == true?'':'CHECKED' ).' value="0">';
+	$external .= '<label for="mcexternal'.$userid.'no">'._("No").'</label>';
 	$external .= '</span>';
 
 	$queue = '<span class="radioset">';
-	$queue .= '<input '.$qstatus.' type="radio" name="mcqueue" id="mcqueue'.$mc_ext.'yes" '.($mc_params['queue'] == true?'CHECKED':'').' value="1">';
-	$queue .= '<label for="mcqueue'.$mc_ext.'yes">'._("Yes").'</label>';
-	$queue .= '<input '.$qstatus.' type="radio" name="mcqueue" id="mcqueue'.$mc_ext.'no" '.($mc_params['queue'] == true?'':'CHECKED' ).' value="0">';
-	$queue .= '<label for="mcqueue'.$mc_ext.'no">'._("No").'</label>';
+	$queue .= '<input '.$qstatus.' type="radio" name="mcqueue" id="mcqueue'.$userid.'yes" '.($mc_params['queue'] == true?'CHECKED':'').' value="1">';
+	$queue .= '<label for="mcqueue'.$userid.'yes">'._("Yes").'</label>';
+	$queue .= '<input '.$qstatus.' type="radio" name="mcqueue" id="mcqueue'.$userid.'no" '.($mc_params['queue'] == true?'':'CHECKED' ).' value="0">';
+	$queue .= '<label for="mcqueue'.$userid.'no">'._("No").'</label>';
 	$queue .= '</span>';
 
 	$ringgroup = '<span class="radioset">';
-	$ringgroup .= '<input '.$rgstatus.' type="radio" name="mcringgroup" id="mcringgroup'.$mc_ext.'yes" '.($mc_params['ringgroup'] == true?'CHECKED':'').' value="1" >';
-	$ringgroup .= '<label for="mcringgroup'.$mc_ext.'yes">'._("Yes").'</label>';
-	$ringgroup .= '<input '.$rgstatus.' type="radio" name="mcringgroup" id="mcringgroup'.$mc_ext.'no" '.($mc_params['ringgroup'] == true?'':'CHECKED' ).' value="0" >';
-	$ringgroup .= '<label for="mcringgroup'.$mc_ext.'no">'._("No").'</label>';
+	$ringgroup .= '<input '.$rgstatus.' type="radio" name="mcringgroup" id="mcringgroup'.$userid.'yes" '.($mc_params['ringgroup'] == true?'CHECKED':'').' value="1" >';
+	$ringgroup .= '<label for="mcringgroup'.$userid.'yes">'._("Yes").'</label>';
+	$ringgroup .= '<input '.$rgstatus.' type="radio" name="mcringgroup" id="mcringgroup'.$userid.'no" '.($mc_params['ringgroup'] == true?'':'CHECKED' ).' value="0" >';
+	$ringgroup .= '<label for="mcringgroup'.$userid.'no">'._("No").'</label>';
 	$ringgroup .= '</span>';
 ?>
 
 <form action="?display=missedcall" method="post" class="fpbx-submit" id="missedcallform" name="missedcallform" >
-	<input type="hidden" name='extension' value="<?php echo $mc_ext ?>">
+	<input type="hidden" name='userid' value="<?php echo $userid ?>">
+	<input type="hidden" name='extension' value="<?php echo $extension ?>">
 	<input type="hidden" name='action' value="submit">
 
 	<!--internal-->

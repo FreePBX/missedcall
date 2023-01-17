@@ -67,8 +67,9 @@
 	$send_notice 	= false;
 	$internal 		= false;
 	$external 		= false;
-	$mc_params 		= $mc->get($extension);;
+	$mc_params 		= $mc->get($extension,'ByEXT');
 	$user			= $um->getUserByDefaultExtension($extension);
+	$userid  		= $user['id'];
 	$mcenabled		= $um->getCombinedModuleSettingByID($user['id'],'missedcall','mcenabled',false, true);
 	$mcrg 			= $um->getCombinedModuleSettingByID($user['id'],'missedcall','mcrg',false, true);
 	$mcq  			= $um->getCombinedModuleSettingByID($user['id'],'missedcall','mcq', false, true);
@@ -82,7 +83,7 @@
 	if ($enabled && $extension != 's') {
 		switch ($enabled) {
 			case "enable":
-				$foo = $mc->misscallEnable($extension);
+				$foo = $mc->misscallEnable($userid);
 				$agi->answer();
 				$agi->stream_file("missed");
 				$agi->stream_file("call");
@@ -91,7 +92,7 @@
 				log_write("Missed call notify for $extension set to enable");
 			break;
 			case "disable":
-				$foo = $mc->misscallDisable($extension);
+				$foo = $mc->misscallDisable($userid);
 				$agi->answer();
 				$agi->stream_file("missed");
 				$agi->stream_file("call");
@@ -100,7 +101,7 @@
 				log_write("Missed call notify for $extension set to disable");
 			break;
 			case "toggle":
-				$foo = $mc->Toggle($extension);
+				$foo = $mc->Toggle($userid);
 				$agi->answer();
 				$agi->stream_file("missed");
 				$agi->stream_file("call");
@@ -128,7 +129,7 @@
 	}
 
 	// get missed call params for ringing extension, array of enable, queue, ringgroup, internal, external, email
-	$mc_params = $mc->get($extension);
+	$mc_params = $mc->get($extension,'byEXT');
 
 	// if notifications are disabled for ringing extension, can exit immediately
 	if (!$mc_params['enable']  &&  $queuecall == "") {
