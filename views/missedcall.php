@@ -58,7 +58,7 @@
 	</div>
 	<div class="row">
 		<div class="col-md-12">
-			<span id="mcrg-help" class="help-block fpbx-help-block"><?php echo _('Enable the Missed Call from Ring Group.')?></span>
+			<span id="mcrg-help" class="help-block fpbx-help-block"><?php echo _('Enable the Missed Call from Ring Group. And Premission to Change the Ring Group call settings')?></span>
 		</div>
 	</div>
 </div>
@@ -88,7 +88,65 @@
 	</div>
 	<div class="row">
 		<div class="col-md-12">
-			<span id="mcq-help" class="help-block fpbx-help-block"><?php echo _('Enable the Missed Call from Queue.')?></span>
+			<span id="mcq-help" class="help-block fpbx-help-block"><?php echo _('Enable the Missed Call from Queue. And Premission to Change the Queue call settings')?></span>
+		</div>
+	</div>
+</div>
+<div class="element-container">
+	<div class="row">
+		<div class="col-md-12">
+			<div class="row">
+				<div class="form-group">
+					<div class="col-md-4 control-label">
+						<label for="mci"><?php echo _('Call from Internal')?></label>
+						<i class="fa fa-question-circle fpbx-help-icon" data-for="mci"></i>
+					</div>
+					<div class="col-md-8">
+						<span class="radioset">
+							<input type="radio" name="mci" class="form-control " id="mci0" value="true" <?php echo ($mci) ? 'checked' : ''?>><label for="mci0"><?php echo _('Yes')?></label>
+							<input type="radio" name="mci" class="form-control " id="mci1" value="false" <?php echo (!is_null($mci) && !$mci) ? 'checked' : ''?>><label for="mci1"><?php echo _('No')?></label>
+							<?php if($mode == "user") {?>
+								<input type="radio" id="mci2" name="mci" value='inherit' <?php echo is_null($mci) ? 'checked' : ''?>>
+								<label for="mci2"><?php echo _('Inherit')?></label>
+							<?php } ?>
+						</span>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-12">
+			<span id="mci-help" class="help-block fpbx-help-block"><?php echo _('Enable the Missed Call from Internal.And Premission to Change the Internal call settings')?></span>
+		</div>
+	</div>
+</div>
+<div class="element-container">
+	<div class="row">
+		<div class="col-md-12">
+			<div class="row">
+				<div class="form-group">
+					<div class="col-md-4 control-label">
+						<label for="mcx"><?php echo _('Call from External')?></label>
+						<i class="fa fa-question-circle fpbx-help-icon" data-for="mcx"></i>
+					</div>
+					<div class="col-md-8">
+						<span class="radioset">
+							<input type="radio" name="mcx" class="form-control " id="mcx0" value="true" <?php echo ($mcx) ? 'checked' : ''?>><label for="mcx0"><?php echo _('Yes')?></label>
+							<input type="radio" name="mcx" class="form-control " id="mcx1" value="false" <?php echo (!is_null($mcx) && !$mcx) ? 'checked' : ''?>><label for="mcx1"><?php echo _('No')?></label>
+							<?php if($mode == "user") {?>
+								<input type="radio" id="mcx2" name="mcx" value='inherit' <?php echo is_null($mcx) ? 'checked' : ''?>>
+								<label for="mcx2"><?php echo _('Inherit')?></label>
+							<?php } ?>
+						</span>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-12">
+			<span id="mcx-help" class="help-block fpbx-help-block"><?php echo _('Enable the Missed Call from Ring Group. And Premission to Change the external call settings')?></span>
 		</div>
 	</div>
 </div>

@@ -44,7 +44,7 @@ function saveSelected(status) {
 	sel={};
 	ext={};
 	$.each(selected, function(index, value){
-		sel[index]=value.extension.ext;
+		sel[index]=value.userid;
 	})
 
 	ext["extensions"]= sel;
@@ -173,17 +173,16 @@ function is_email(email){
 	return disabled;
 }
 
-function extensionformatter(v,r) {
-	email = is_email(r.extension.email);
-	return '<a '+disabled+' id="action'+r.extension.ext+'" class="button btn" href="/admin/config.php?display=missedcall&view=form&extdisplay='+r.extension.ext+'"><i class="fa fa-edit"></i>&nbsp;'+r.extension.ext+'</a>';
+function editformatter(v,r) {
+	return '<a  id="action'+r.userid+'" class="button btn" href="/admin/config.php?display=missedcall&view=form&userid='+r.userid+'"><i class="fa fa-edit"></i>&nbsp;'+r.extension+'</a>';
 }
 
 function enabledformatter(v,r) {
-	email = is_email(r.extension.email);
+	email = is_email(r.email);
 	rows = '<span class="radioset">';
-	rows += '<input '+disabled+' type="radio" name="mctoggle'+r.status.ext+'" id="mctoggle'+r.status.ext+'yes" onclick="mctoggle('+r.status.ext+')" data-for="'+r.status.ext+'" '+(r.status.enabled == true?'CHECKED':'')+'>';
+	rows += '<input '+disabled+' type="radio" name="mctoggle'+r.status.ext+'" id="mctoggle'+r.status.ext+'yes" onclick="mctoggle('+r.status.ext+')" data-for="'+r.status.ext+'" '+(r.status.enabled == 1?'CHECKED':'')+'>';
 	rows += '<label for="mctoggle'+r.status.ext+'yes">'+_("Yes")+'</label>';
-	rows += '<input '+disabled+' type="radio" name="mctoggle'+r.status.ext+'" id="mctoggle'+r.status.ext+'no" onclick="mctoggle('+r.status.ext+')" data-for="'+r.status.ext+'" '+(r.status.enabled == true?'':'CHECKED' )+' value="CHECKED">';
+	rows += '<input '+disabled+' type="radio" name="mctoggle'+r.status.ext+'" id="mctoggle'+r.status.ext+'no" onclick="mctoggle('+r.status.ext+')" data-for="'+r.status.ext+'" '+(r.status.enabled == 1?'':'CHECKED' )+' value="CHECKED">';
 	rows += '<label for="mctoggle'+r.status.ext+'no">'+_("No")+'</label>';
 	rows += '</span>';
 	return rows;

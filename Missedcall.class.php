@@ -60,10 +60,10 @@ class Missedcall extends FreePBX_Helpers implements BMO {
 		unset($fcc);
 
 		$users = $this->getUsers();
-		foreach($users as $ext){
+		foreach($users as $id=>$ext){
 			if(!empty($ext)){
 				$response = $this->FreePBX->astman->database_put("AMPUSER","$ext/missedcall", "disable");
-				$this->update($ext,0, 0, 0, 0);
+				$this->update($id,$ext,0, 0, 0, 0);
 			}			
 		}
 	}
@@ -239,13 +239,13 @@ class Missedcall extends FreePBX_Helpers implements BMO {
 			case 'savebulk':
 				switch($_REQUEST["status"]){
 					case "enable":
-						foreach($_REQUEST["extensions"] as $key => $ext){
-							$this->misscallEnable($ext);
+						foreach($_REQUEST["extensions"] as $key => $userid){
+							$this->misscallEnable($userid);
 						}
 						return ["status" => true, "message" => _("Success.")];
 					case "disable":
-						foreach($_REQUEST["extensions"] as $key => $ext){
-							$this->misscallDisable($ext);
+						foreach($_REQUEST["extensions"] as $key => $userid){
+							$this->misscallDisable($userid);
 						}
 						return ["status" => true, "message" => _("Success.")];
 					default:
@@ -271,18 +271,18 @@ class Missedcall extends FreePBX_Helpers implements BMO {
 			case "get_status":
 				$users = $this->getUsers();
 				$list = [];
-				foreach($users as $ext){
-					$mc_params 	= $this->get($ext);
+				foreach($users as $id => $ext){
+					$mc_params 	= $this->get($id);
 					if(empty($mc_params['email'])){
 						continue;
 					}
 					$user 	  	= $this->userman->getUserByDefaultExtension($ext);
-					$mcenabled	= $this->userman->getCombinedModuleSettingByID($user['id'],'missedcall','mcenabled', false, true);
+					$mcenabled	= $this->userman->getCombinedModuleSettingByID($id,'missedcall','mcenabled', false, true);
 					if(!$mcenabled){
 						continue;
 					}
-					$mcq  		= $this->userman->getCombinedModuleSettingByID($user['id'],'missedcall','mcq', false, true);
-					$mcrg		= $this->userman->getCombinedModuleSettingByID($user['id'],'missedcall','mcrg',false, true);			
+					$mcq  		= $this->userman->getCombinedModuleSettingByID($id,'missedcall','mcq', false, true);
+					$mcrg		= $this->userman->getCombinedModuleSettingByID($id,'missedcall','mcrg',false, true);			
 
 					$internal 	= $mc_params['internal'] == "1"  	? '<i class="fa fa-check-square-o"></i>' : '<i class="fa fa-square-o"></i>' ;
 					$external	= $mc_params['external'] == "1" 	? '<i class="fa fa-check-square-o"></i>' : '<i class="fa fa-square-o"></i>' ;
@@ -290,10 +290,12 @@ class Missedcall extends FreePBX_Helpers implements BMO {
 					$ringgroup 	= $mc_params['ringgroup']== "1" 	? '<i class="fa fa-check-square-o"></i>' : '<i class="fa fa-square-o"></i>' ;
 					$queue		= $mcq 					 == "1"		? $queue								 : '<i class="fa fa-ban"></i>'		;
 					$ringgroup	= $mcrg 				 == "1"		? $ringgroup							 : '<i class="fa fa-ban"></i>'		;
-					$details	= [ "ext" => $ext, "enabled" => $this->getStatus($ext), "email" => $mc_params['email'] ];
+					$details	= [ "ext" => $ext, "enabled" => $this->getStatus($id), "email" => $mc_params['email'] ];
 
 					$list[] = [ 
-						"extension" => $details, 
+						"userid" =>$id,
+						"username" =>$user['username'],
+						"extension" => $ext, 
 						"status" 	=> $details,
 						"email" 	=> $mc_params['email'],
 						"internal" 	=> $internal,
@@ -322,11 +324,14 @@ class Missedcall extends FreePBX_Helpers implements BMO {
 					$mcenabled	= ($_REQUEST['action'] == "addgroup") ? true : $this->userman->getModuleSettingByGID($_REQUEST['group'],'missedcall','mcenabled');
 					$mcrg 		= ($_REQUEST['action'] == "addgroup") ? true : $this->userman->getModuleSettingByGID($_REQUEST['group'],'missedcall','mcrg');
 					$mcq 		= ($_REQUEST['action'] == "addgroup") ? true : $this->userman->getModuleSettingByGID($_REQUEST['group'],'missedcall','mcq');
+					$mci 		= ($_REQUEST['action'] == "addgroup") ? true : $this->userman->getModuleSettingByGID($_REQUEST['group'],'missedcall','mci');
+					$mcx 		= ($_REQUEST['action'] == "addgroup") ? true : $this->userman->getModuleSettingByGID($_REQUEST['group'],'missedcall','mcx');
+					
 					return array(
 						array(
 							"title" => _("Missed Call"),
 							"rawname" => "missedcall",
-							"content" => load_view(__DIR__.'/views/missedcall.php',array("mode" => "group", "error" => $error, "mcenabled" => $mcenabled, "mcrg" => $mcrg, "mcq" => $mcq))
+							"content" => load_view(__DIR__.'/views/missedcall.php',array("mode" => "group", "error" => $error, "mcenabled" => $mcenabled, "mcrg" => $mcrg, "mcq" => $mcq,"mci" =>$mci,"mcx"=>$mcx))
 						)
 					);
 				case 'adduser':
@@ -336,12 +341,15 @@ class Missedcall extends FreePBX_Helpers implements BMO {
 						$mcenabled	= $this->userman->getModuleSettingByID($user['id'],'missedcall','mcenabled',true);
 						$mcrg 		= $this->userman->getModuleSettingByID($user['id'],'missedcall','mcrg',true);
 						$mcq 		= $this->userman->getModuleSettingByID($user['id'],'missedcall','mcq',true);
+						$mci 		= $this->userman->getModuleSettingByID($user['id'],'missedcall','mci',true);
+						$mcx 		= $this->userman->getModuleSettingByID($user['id'],'missedcall','mcx',true);
+					
 					} 
 					return array(
 						array(
 							"title" => _("Missed Call"),
 							"rawname" => "missedcall",
-							"content" => load_view(__DIR__.'/views/missedcall.php',array("mode" => "user", "error" => $error, "mcenabled" => $mcenabled, "mcrg" => $mcrg, "mcq" => $mcq))
+							"content" => load_view(__DIR__.'/views/missedcall.php',array("mode" => "user", "error" => $error, "mcenabled" => $mcenabled, "mcrg" => $mcrg, "mcq" => $mcq,"mci" =>$mci,"mcx"=>$mcx))
 						)
                     );
                     default:
@@ -416,30 +424,85 @@ class Missedcall extends FreePBX_Helpers implements BMO {
 			if(isset($_POST['mcenabled'])) {
 				if($_POST['mcenabled'] == "true") {
 					$this->userman->setModuleSettingByID($id,'missedcall','mcenabled',true);
+					$this->updateOne($id,'enable',true,$data);
 				} elseif($_POST['mcenabled'] == "false") {
 					$this->userman->setModuleSettingByID($id,'missedcall','mcenabled',false);
+					$this->updateOne($id,'enable',true,$data);
 				} else {
 					$this->userman->setModuleSettingByID($id,'missedcall','mcenabled',null);
+					//getcombined settings
+					$mcenabled=	$this->userman->getCombinedModuleSettingByID($id,'missedcall','mcenabled');
+					$this->updateOne($id,'enable',$mcenabled,$data);
 				}
 			}
 
 			if(isset($_POST['mcrg'])) {
 				if($_POST['mcrg'] == "true") {
 					$this->userman->setModuleSettingByID($id,'missedcall','mcrg',true);
+					$this->updateOne($id,'ringgroup',true,$data);
 				} elseif($_POST['mcrg'] == "false") {
 					$this->userman->setModuleSettingByID($id,'missedcall','mcrg',false);
+					$this->updateOne($id,'ringgroup',false,$data);
 				} else {
 					$this->userman->setModuleSettingByID($id,'missedcall','mcrg',null);
+					$mcrg=	$this->userman->getCombinedModuleSettingByID($id,'missedcall','mcrg');
+					if($mcrg ==1){ // user is allowed to change the settings
+						$this->updateOne($id,'ringgroup',true,$data);
+					} else {
+						$this->updateOne($id,'ringgroup',false,$data);
+					}
 				}
 			}
 
 			if(isset($_POST['mcq'])) {
 				if($_POST['mcq'] == "true") {
 					$this->userman->setModuleSettingByID($id,'missedcall','mcq',true);
+					$this->updateOne($id,'queue',true,$data);
 				} elseif($_POST['mcq'] == "false") {
 					$this->userman->setModuleSettingByID($id,'missedcall','mcq',false);
+					$this->updateOne($id,'queue',false,$data);
 				} else {
 					$this->userman->setModuleSettingByID($id,'missedcall','mcq',null);
+					$mcq=	$this->userman->getCombinedModuleSettingByID($id,'missedcall','mcq');
+					if($mcq ==1){ // user is allowed to change the settings
+						$this->updateOne($id,'queue',true,$data);
+					} else {
+						$this->updateOne($id,'queue',false,$data);
+					}
+				}
+			}
+			if(isset($_POST['mci'])) {
+				if($_POST['mci'] == "true") {
+					$this->userman->setModuleSettingByID($id,'missedcall','mci',true);
+					$this->updateOne($id,'internal',true,$data);
+				} elseif($_POST['mci'] == "false") {
+					$this->userman->setModuleSettingByID($id,'missedcall','mci',false);
+					$this->updateOne($id,'internal',false,$data);
+				} else {
+					$this->userman->setModuleSettingByID($id,'missedcall','mci',null);
+					$mci=	$this->userman->getCombinedModuleSettingByID($id,'missedcall','mci');
+					if($mci ==1){ // user is allowed to change the settings
+						$this->updateOne($id,'internal',true,$data);
+					} else {
+						$this->updateOne($id,'internal',false,$data);
+					}
+				}
+			}
+			if(isset($_POST['mcx'])) {
+				if($_POST['mcx'] == "true") {
+					$this->userman->setModuleSettingByID($id,'missedcall','mcx',true);
+					$this->updateOne($id,'external',true,$data);
+				} elseif($_POST['mcx'] == "false") {
+					$this->userman->setModuleSettingByID($id,'missedcall','mcx',false);
+					$this->updateOne($id,'external',false,$data);
+				} else {
+					$this->userman->setModuleSettingByID($id,'missedcall','mcx',null);
+					$mcx=	$this->userman->getCombinedModuleSettingByID($id,'missedcall','mcx');
+					if($mcx ==1){ // user is allowed to change the settings
+						$this->updateOne($id,'external',true,$data);
+					} else {
+						$this->updateOne($id,'external',false,$data);
+					}
 				}
 			}
 		}
@@ -532,7 +595,7 @@ class Missedcall extends FreePBX_Helpers implements BMO {
 	}
 
 	public function doConfigPageInit($page) {
-
+		$userid 	= $_REQUEST['userid'];
 		$extension 	= $_REQUEST['extension']?$_REQUEST['extension']:'';
 		$internal 	= $_REQUEST['mcinternal']?$_REQUEST['mcinternal']:'';
 		$external 	= $_REQUEST['mcexternal']?$_REQUEST['mcexternal']:'';
@@ -544,7 +607,7 @@ class Missedcall extends FreePBX_Helpers implements BMO {
 		//Handle form submissions
 		switch ($action) {
 			case 'submit':
-				$this->update($extension,$queue,$ringgroup,$internal,$external);
+				$this->update($userid,$extension,$queue,$ringgroup,$internal,$external,'MMP');
 			break;
 		}
 	}
@@ -759,9 +822,9 @@ class Missedcall extends FreePBX_Helpers implements BMO {
 	 */
 	public function getUsers() {
 		$users = array();
-		$ampuser_array = $this->FreePBX->Core->getAllUsersByDeviceType();
-		foreach ($ampuser_array as $user) {
-			$users[] = $user['extension'];
+		$userman = $this->FreePBX->userman->getAllUsers();
+		foreach ($userman as $user) {
+			$users[$user['id']] = $user['default_extension'];
 		}
 		if (is_array($users)) {
 			return $users;
@@ -775,9 +838,9 @@ class Missedcall extends FreePBX_Helpers implements BMO {
 	 * @param string $exten
 	 * @return Returns string with email address or null if none.
 	 */
-	private function getEmail($exten) {
-		if ($exten) {
-			$details = $this->FreePBX->Userman()->getUserByDefaultExtension($exten);
+	private function getEmail($id) {
+		if ($id) {
+			$details = $this->FreePBX->Userman()->getUserByID($id);
 			if(is_array($details) && !empty($details['email'])){
 				$email = $details['email'];
 			}			
@@ -792,21 +855,25 @@ class Missedcall extends FreePBX_Helpers implements BMO {
 
 	/**
 	 * getStatus retuns whether missed calls is enabled or disabled for a specific extension
-	 * @param string $exten
+	 * @param string $id
 	 * @return Returns true or false
 	 */
-	public function getStatus($exten) {
-		$response = $this->FreePBX->astman->database_get("AMPUSER","$exten/missedcall");
-		switch($response){
-			case "enable":
+	public function getStatus($userid) {
+		$query = "SELECT * FROM missedcall WHERE userid= ?";
+		$stmt = $this->db->prepare($query);
+		$stmt->execute(array($userid));
+		$data = $stmt->fetch(\PDO::FETCH_ASSOC);
+		if(isset($data['notification'])){
+			switch($data['notification']){
+			case "1":
 				return true;
-			case "disable":
+			case "0":
 				return false;
 			default:
-				// If the extension is not found, we create an entry.
-				$this->misscallDisable($exten);
 				return false;
+			}
 		}
+		return false;
 	}
 
 	/**
@@ -814,12 +881,15 @@ class Missedcall extends FreePBX_Helpers implements BMO {
 	 * @param string $exten
 	 * @return
 	 */
-	public function misscallEnable($exten) {
-		$is_first	= $this->get($exten);
-		if(empty($is_first["extension"])){
-			// Set int and ext when missed call notify is used for the first time.
-			$this->update($exten,0, 0, 0, 1);
-		}
+	public function misscallEnable($userid) {
+		$user = $this->userman->getUserByID($userid);
+		$exten = $user['default_extension'];
+		// disable in DB
+		$sql = "UPDATE `missedcall` SET `notification` = '1' WHERE `userid` = :userid";
+		$stmt = $this->db->prepare($sql);
+		$stmt->bindParam(':userid',$userid, \PDO::PARAM_INT);
+		$stmt->execute();
+		
 		$response = $this->FreePBX->astman->database_put("AMPUSER","$exten/missedcall", "enable");
 		return $response;
 	}
@@ -829,7 +899,14 @@ class Missedcall extends FreePBX_Helpers implements BMO {
 	 * @param string $exten
 	 * @return
 	 */
-	public function misscallDisable($exten) {
+	public function misscallDisable($userid) {
+		$user = $this->userman->getUserByID($userid);
+		$exten = $user['default_extension'];
+		// disable in DB
+		$sql = "UPDATE `missedcall` SET `notification` = '0' WHERE `userid` = :userid";
+		$stmt = $this->db->prepare($sql);
+		$stmt->bindParam(':userid',$userid, \PDO::PARAM_INT);
+		$stmt->execute();
 		$response = $this->FreePBX->astman->database_put("AMPUSER","$exten/missedcall", "disable");
 		return $response;
 	}
@@ -839,13 +916,13 @@ class Missedcall extends FreePBX_Helpers implements BMO {
 	 * @param string $exten
 	 * @return the status of the extension after the toggle string 'enable' or 'disable'
 	 */
-	public function Toggle($exten) {
-		$status 	= $this->getStatus($exten);
+	public function Toggle($id) {
+		$status 	= $this->getStatus($id);
 		if (!$status) {
-			$resp = $this->misscallEnable($exten);
+			$resp = $this->misscallEnable($id);
 			return 'enable';
 		} else {
-			$resp = $this->misscallDisable($exten);
+			$resp = $this->misscallDisable($id);
 			return 'disable';
 		}
 	}
@@ -853,28 +930,27 @@ class Missedcall extends FreePBX_Helpers implements BMO {
 	//Module getters
 	/**
 	 * get Gets all missed call params for specific extension
-	 * @param string $exten
+	 * @param string $userid
+	 * @param getby by userid or extension
 	 * @return Returns array of all params.
 	 */
-	public function get($exten){
-		$sql = "SELECT * FROM `missedcall` WHERE `extension` = :id";
-		$stmt = $this->db->prepare($sql);
-		$stmt->bindParam(':id',$exten, \PDO::PARAM_INT);
+	public function get($userid,$getby='userid'){
+		if($getby =='userid'){
+			$sql = "SELECT * FROM `missedcall` WHERE `userid` = :userid";
+			$stmt = $this->db->prepare($sql);
+			$stmt->bindParam(':userid',$userid, \PDO::PARAM_INT);
+		}else {
+			$sql = "SELECT * FROM `missedcall` WHERE `extension` = :extension";
+			$stmt = $this->db->prepare($sql);
+			$stmt->bindParam(':extension',$userid, \PDO::PARAM_INT);
+		}			
 		$stmt->execute();
-		$row = $stmt->fetchObject();
-		$result =  array(
-			'extension' => isset($row->extension) ? $row->extension : false,
-			'queue' 	=> isset($row->queue) ? $row->queue : false,
-			'ringgroup' => isset($row->ringgroup) ? $row->ringgroup : false,
-			'internal' 	=> isset($row->internal) ? $row->internal : false,
-			'external' 	=> isset($row->external) ? $row->external : false,
-			);
-
-		$result['enable'] = $this->getStatus($exten);
-		$result['email'] = $this->getEmail($exten);
-		return $result;
+		$ret = $stmt->fetch(\PDO::FETCH_ASSOC);
+		$ret['email'] = $this->getEmail($userid);
+		$ret['enable'] = $ret['notification'];
+		return $ret;
 	}
-	
+
 	/**
 	 * getAllUsers : Getting all users with their status from the database.
 	 *
@@ -888,23 +964,41 @@ class Missedcall extends FreePBX_Helpers implements BMO {
 		return $ret;
 	}
 
-	public function update($extension,$queue,$ringgroup,$internal,$external){
+	/*  $id : userman userid
+		$extension : userman users extension
+		$queue : Queue enabled 
+		$ringgroup : ringgrroup enabled 
+		$internal : internal enabled
+		$external : external enabled
+		$updatefrom : userman( value based on userman settings), MMS( Missedcall Module Setttins)
+						We need to sync the settings from userman to MMP and MMP to Userman
+	*/
+	public function update($id,$extension,$queue,$ringgroup,$internal,$external,$updatefrom='userman'){
 		// change bools to 1/0
 		$queue 		= $queue?1:0;
 		$ringgroup 	= $ringgroup?1:0;
 		$internal 	= $internal?1:0;
 		$external 	= $external?1:0;
-
-		// check to see if this is a new record or updating old record
-		$ext_data = $this->get($extension);
-		if ($ext_data['extension']) {
-			$sql = 'UPDATE `missedcall` SET `queue` = :queue, `ringgroup` = :ringgroup, `internal` = :internal, `external` = :external WHERE `extension` = :extension';
-		} else {
-			$sql = 'INSERT INTO `missedcall` (`extension`,`queue`,`ringgroup`,`internal`,`external`) VALUES (:extension,:queue,:ringgroup,:internal,:external)';
+		if($updatefrom == 'userman') {
+			//userman will have enable, ringgroup,queue 
+			$mcenabled=	$this->userman->getCombinedModuleSettingByID($id,'missedcall','mcenabled');
+			$queue = $this->userman->getCombinedModuleSettingByID($id,'missedcall','mcq');
+			$ringgroup = $this->userman->getCombinedModuleSettingByID($id,'missedcall','mcrg');
+			$internal = $this->userman->getCombinedModuleSettingByID($id,'missedcall','mci');
+			$external = $this->userman->getCombinedModuleSettingByID($id,'missedcall','mcx');
 		}
-
+		// check to see if this is a new record or updating old record
+		$query = "SELECT * from missedcall where userid = ?";
+		$stm = $this->db->prepare($query);
+		$stm->execute(array($id));
+		$result = $stm->fetch(\PDO::FETCH_ASSOC);
+		if (isset($result['userid'])) {
+			$sql = 'UPDATE `missedcall` SET `queue` = :queue, `ringgroup` = :ringgroup, `internal` = :internal, `external` = :external, `extension` = :extension WHERE `userid` = :userid';
+		} else {
+			$sql = 'INSERT INTO `missedcall` (`userid`,`extension`,`queue`,`ringgroup`,`internal`,`external`) VALUES (:userid, :extension,:queue,:ringgroup,:internal,:external)';
+		}
 		$stmt = $this->db->prepare($sql);
-
+		$stmt->bindParam(':userid', $id, \PDO::PARAM_INT);
 		$stmt->bindParam(':queue', $queue, \PDO::PARAM_INT);
 		$stmt->bindParam(':ringgroup', $ringgroup, \PDO::PARAM_INT);
 		$stmt->bindParam(':extension', $extension, \PDO::PARAM_INT);
@@ -914,12 +1008,12 @@ class Missedcall extends FreePBX_Helpers implements BMO {
 		return;
 	}
 
-	public function updateOne($extension,$type,$value){
+	public function updateOne($userid,$type,$value,$data=[]){
 		if($type == "enable") {
 			if ($value) {
-				$this->misscallEnable($extension);
+				$this->misscallEnable($userid);
 			} else {
-				$this->misscallDisable($extension);
+				$this->misscallDisable($userid);
 			}
 			return;
 		}
@@ -943,17 +1037,27 @@ class Missedcall extends FreePBX_Helpers implements BMO {
 		}
 		// change bools to 1/0
 		$value =  $value?1:0;
-
+		//get extension number from userman
+		$user = $this->userman->getUserByID($userid);
+		$extension = $user['default_extension'];
+		if($extension == ""){
+			// no extension then no need to add any settings
+			return;
+		}
 		// check to see if this is a new record or updating old record
-		$ext_data = $this->get($extension);
-		if ($ext_data['extension']) {
-			$sql = 'UPDATE `missedcall` SET `'.$key.'` = :value WHERE `extension` = :extension';
+		$query = "SELECT * from missedcall where userid = ?";
+		$stm = $this->db->prepare($query);
+		$stm->execute(array($userid));
+		$result = $stm->fetch(\PDO::FETCH_ASSOC);
+
+		if ($result['userid']) {
+			$sql = 'UPDATE `missedcall` SET `'.$key.'` = :value ,`extension`=:extension WHERE `userid` = :userid';
 		} else {
-			$sql = 'INSERT INTO `missedcall` (`'.$key.'`, `extension`) VALUES (:value, :extension)';
+			$sql = 'INSERT INTO `missedcall` (`'.$key.'`, `userid`,`extension`) VALUES (:value,:userid, :extension)';
 		}
 
 		$stmt = $this->db->prepare($sql);
-		$stmt->execute(array("value" => $value, "extension" => $extension));
+		$stmt->execute(array("value" => $value,"userid"=>$userid, "extension" => $extension));
 		return;
 	}
 
