@@ -281,17 +281,11 @@ class Missedcall extends FreePBX_Helpers implements BMO {
 					if(!$mcenabled){
 						continue;
 					}
-					$mcq  		= $this->userman->getCombinedModuleSettingByID($id,'missedcall','mcq', false, true);
-					$mcrg		= $this->userman->getCombinedModuleSettingByID($id,'missedcall','mcrg',false, true);			
-
 					$internal 	= $mc_params['internal'] == "1"  	? '<i class="fa fa-check-circle text-success"></i>' : '<i class="fa fa-times-circle text-danger"></i>' ;
 					$external	= $mc_params['external'] == "1" 	? '<i class="fa fa-check-circle text-success"></i>' : '<i class="fa fa-times-circle text-danger"></i>' ;
 					$queue 		= $mc_params['queue'] 	 == "1" 	? '<i class="fa fa-check-circle text-success"></i>' : '<i class="fa fa-times-circle text-danger"></i>' ;
 					$ringgroup 	= $mc_params['ringgroup']== "1" 	? '<i class="fa fa-check-circle text-success"></i>' : '<i class="fa fa-times-circle text-danger"></i>' ;
-					$queue		= $mcq 					 == "1"		? $queue								 : '<i class="fa fa-ban"></i>'		;
-					$ringgroup	= $mcrg 				 == "1"		? $ringgroup							 : '<i class="fa fa-ban"></i>'		;
 					$details	= [ "ext" => $ext, "enabled" => $this->getStatus($id), "email" => $mc_params['email'] ];
-
 					$list[] = [ 
 						"userid" =>$id,
 						"username" =>$user['username'],
@@ -304,7 +298,6 @@ class Missedcall extends FreePBX_Helpers implements BMO {
 						"ringgroup" => $ringgroup,
 					];
 				}
-				
 				return $list;	
 			case "saveEmailSettings":
 				return $this->saveEmailSettings($_REQUEST);			
@@ -388,6 +381,20 @@ class Missedcall extends FreePBX_Helpers implements BMO {
 					$this->userman->setModuleSettingByGID($id,'missedcall','mcq',true);
 				} else {
 					$this->userman->setModuleSettingByGID($id,'missedcall','mcq',false);
+				}
+			}
+			if(isset($_POST['mci'])) {
+				if($_POST['mci'] == "true") {
+					$this->userman->setModuleSettingByGID($id,'missedcall','mci',true);
+				} else{
+					$this->userman->setModuleSettingByGID($id,'missedcall','mci',false);
+				}
+			}
+			if(isset($_POST['mcx'])) {
+				if($_POST['mcx'] == "true") {
+					$this->userman->setModuleSettingByGID($id,'missedcall','mcx',true);
+				} else {
+					$this->userman->setModuleSettingByGID($id,'missedcall','mcx',false);
 				}
 			}
 		}
@@ -864,16 +871,9 @@ class Missedcall extends FreePBX_Helpers implements BMO {
 		$stmt->execute(array($userid));
 		$data = $stmt->fetch(\PDO::FETCH_ASSOC);
 		if(isset($data['notification'])){
-			switch($data['notification']){
-			case "1":
-				return true;
-			case "0":
-				return false;
-			default:
-				return false;
-			}
+			return $data['notification'];
 		}
-		return false;
+		return 0;
 	}
 
 	/**

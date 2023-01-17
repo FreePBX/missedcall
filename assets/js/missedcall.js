@@ -227,9 +227,9 @@ function editformatter(v,r) {
 function enabledformatter(v,r) {
 	email = is_email(r.email);
 	rows = '<span class="radioset">';
-	rows += '<input '+disabled+' type="radio" name="mctoggle'+r.status.ext+'" id="mctoggle'+r.status.ext+'yes" onclick="mctoggle('+r.status.ext+')" data-for="'+r.status.ext+'" '+(r.status.enabled == 1?'CHECKED':'')+'>';
+	rows += '<input '+disabled+' type="radio" name="mctoggle'+r.status.ext+'" id="mctoggle'+r.status.ext+'yes" onclick="mctoggle('+r.userid+')" data-for="'+r.userid+'" '+(r.status.enabled == 1?'CHECKED':'')+'>';
 	rows += '<label for="mctoggle'+r.status.ext+'yes">'+_("Yes")+'</label>';
-	rows += '<input '+disabled+' type="radio" name="mctoggle'+r.status.ext+'" id="mctoggle'+r.status.ext+'no" onclick="mctoggle('+r.status.ext+')" data-for="'+r.status.ext+'" '+(r.status.enabled == 1?'':'CHECKED' )+' value="CHECKED">';
+	rows += '<input '+disabled+' type="radio" name="mctoggle'+r.status.ext+'" id="mctoggle'+r.status.ext+'no" onclick="mctoggle('+r.userid+')" data-for="'+r.userid+'" '+(r.status.enabled == 1?'':'CHECKED' )+' value="CHECKED">';
 	rows += '<label for="mctoggle'+r.status.ext+'no">'+_("No")+'</label>';
 	rows += '</span>';
 	return rows;

@@ -71,9 +71,7 @@
 	$user			= $um->getUserByDefaultExtension($extension);
 	$userid  		= $user['id'];
 	$mcenabled		= $um->getCombinedModuleSettingByID($user['id'],'missedcall','mcenabled',false, true);
-	$mcrg 			= $um->getCombinedModuleSettingByID($user['id'],'missedcall','mcrg',false, true);
-	$mcq  			= $um->getCombinedModuleSettingByID($user['id'],'missedcall','mcq', false, true);
-
+	
 	if (empty($mc_params['email']) && $enabled != '') {
 		$agi->answer();
 		$agi->stream_file("access-denied");
