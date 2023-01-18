@@ -52,7 +52,7 @@ class Missedcall extends Modules {
 		//Category for the widgets
 		$user 		= $this->user;
 		$ext 		= !empty($user["default_extension"]) ? $user["default_extension"] : Null;
-		$mc_params 	= $this->mc->get($ext);
+		$mc_params 	= $this->mc->get($user['id']);
 		if(empty($mc_params["email"])){
 			// The code below is useful. 
 			dbug(sprintf( _("Missedcall -- User account '%s' doesn't have a valid email address!"), $user));
@@ -101,7 +101,7 @@ class Missedcall extends Modules {
 			case "missedcall":
 				$user 		= $this->user;
 				$ext 		= !empty($user["default_extension"]) ? $user["default_extension"] : Null;
-				$mc_params 	= $this->mc->get($ext);
+				$mc_params 	= $this->mc->get($user['id']);
 				$user 	  	= $this->userman->getUserByDefaultExtension($ext);
 				$mcq  		= $this->userman->getCombinedModuleSettingByID($user['id'],'missedcall','mcq', false, true);
 				$mcrg		= $this->userman->getCombinedModuleSettingByID($user['id'],'missedcall','mcrg',false, true);
@@ -119,7 +119,7 @@ class Missedcall extends Modules {
 				}
 
 				$displayvars= array(
-					"enable" 	=> $mc_params["enable"], 
+					"notification" 	=> $mc_params["notification"], 
 					"internal" 	=> $mc_params["internal"], 
 					"external" 	=> $mc_params["external"],  
 					"ringgroup" => $mc_params["ringgroup"],  
@@ -161,8 +161,7 @@ class Missedcall extends Modules {
 		$mc_params 	= [];
 		$ext 		= !empty($user["default_extension"]) ? $user["default_extension"] : Null;
 		if(!empty($ext)){
-			$mc_params 	= $this->mc->get($ext);
-			$mc_params["enable"] = $mc_params["enable"] == true ? "1" : "0";
+			$mc_params 	= $this->mc->get($user['id']);
 		}
 		return array("status" => true, "mc" => $mc_params);
 	}
@@ -205,7 +204,7 @@ class Missedcall extends Modules {
 							case "ringgroup":
 							case "internal":
 							case "external":
-							case "enable":
+							case "notification":
 								$type	= $key;
 								$val 	= $value;
 							break;

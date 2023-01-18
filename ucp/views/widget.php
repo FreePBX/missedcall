@@ -2,7 +2,7 @@
     <br>
 	<div class="mcen parent">
 		<div><?php echo _('Enable')?></div>
-		<input class="mcenable" type="checkbox" name="enable" data-type="enable" data-toggle="toggle" <?php echo (trim($enable) == "1") ? 'checked' : ''?> data-on="<?php echo _("On")?>" data-off="<?php echo _("Off")?>">
+		<input class="mcenable" type="checkbox" name="notification" data-type="notification" data-toggle="toggle" <?php echo (trim($notification) == "1") ? 'checked' : ''?> data-on="<?php echo _("On")?>" data-off="<?php echo _("Off")?>">
 	</div>
 	<div class="mcin parent">
 		<div><?php echo _('Internal Calls')?></div>
