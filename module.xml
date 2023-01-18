@@ -43,6 +43,12 @@
 			<method namespace="FreePBX\modules" class="Missedcall" callingMethod="addUser">usermanAddUser</method>
 			<method namespace="FreePBX\modules" class="Missedcall" callingMethod="updateUser">usermanUpdateUser</method>
 		</userman>
+		<bulkhandler class="Bulkhandler" namespace="FreePBX\modules">
+			<method callingMethod="getHeaders" class="Missedcall" namespace="FreePBX\modules">bulkhandlerGetHeaders</method>
+			<method callingMethod="getTypes" class="Missedcall" namespace="FreePBX\modules">bulkhandlerGetTypes</method>
+			<method callingMethod="import" class="Missedcall" namespace="FreePBX\modules">bulkhandlerImport</method>
+			<method callingMethod="export" class="Missedcall" namespace="FreePBX\modules">bulkhandlerExport</method>
+		</bulkhandler>
 	</hooks>
 	<database name="asterisk">
 		<table name="missedcall">
