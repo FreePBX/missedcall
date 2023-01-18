@@ -67,9 +67,9 @@
 	$send_notice 	= false;
 	$internal 		= false;
 	$external 		= false;
-	$mc_params 		= $mc->get($extension,'ByEXT');
 	$user			= $um->getUserByDefaultExtension($extension);
 	$userid  		= $user['id'];
+	$mc_params 		= $mc->get($userid);
 	$mcenabled		= $um->getCombinedModuleSettingByID($user['id'],'missedcall','mcenabled',false, true);
 	
 	if (empty($mc_params['email']) && $enabled != '') {
@@ -128,9 +128,9 @@
 
 	// get missed call params for ringing extension, array of enable, queue, ringgroup, internal, external, email
 	$mc_params = $mc->get($extension,'byEXT');
-
+	$mcgroup = get_var($agi,"MCGROUP");
 	// if notifications are disabled for ringing extension, can exit immediately
-	if (!$mc_params['enable']  &&  $queuecall == "") {
+	if ($mc_params['notification'] == 0   &&  $queuecall == "" || $mcgroup == "") {
 		log_write("Notifications disabled for $extension, exiting");
 		exit;
 	}
@@ -170,7 +170,7 @@
 	}
 
 	// determine if call is to a ring group, check for value of channel
-	$mcgroup = get_var($agi,"MCGROUP");
+
 	if ($mcgroup) {
 		$call_type = "ringgroup";
 		// read the extension from channel 

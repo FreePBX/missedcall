@@ -37,7 +37,7 @@ $linkedid = $json['uniqueid'];
 		if(!isset($dialsts['ANSWER']) && isset($dialsts['MISSED']) ){
 			// check notifiation enabled or not  and send email
 			$mc_params = $McObj->get($ext,'byEXT');
-			if($mc_params['enable']){// check only enable extension
+			if($mc_params['notification'] == 1){// check only enable extension
 				if ($dialsts['call_origin'] == 'Internal' && $mc_params['internal']){
 					$send_notice = true;
 				}
@@ -52,10 +52,10 @@ $linkedid = $json['uniqueid'];
 					$send_notice = true;
 				}
 				// call type  
-				if($queue && $dialsts['CallType'] =='external') {
-					$calltype = 'External(Queue)';
-				} elseif ($ringgroup && $dialsts['CallType'] =='external'){
-					$calltype = 'External(Ringgroup))';
+				if($queue) {
+					$calltype = $dialsts['CallType'].'(Queue)';
+				} elseif ($ringgroup){
+					$calltype = $dialsts['CallType'].'(Ringgroup))';
 				} else {
 					$calltype = $dialsts['CallType'];
 				}
