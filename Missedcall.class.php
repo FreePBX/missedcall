@@ -1172,4 +1172,116 @@ class Missedcall extends FreePBX_Helpers implements BMO {
 
 		return $this->FreePBX->Mail->getEmailTemplateForm($templateData);
 	}
+
+	//BulkHandler hooks
+	public function bulkhandlerGetTypes() {
+		return array(
+			'missedcall' => array(
+				'name' => _('missedcall'),
+				'description' => _('Import/Export missedcall')
+			)
+		);
+	}
+	
+	public function bulkhandlerGetHeaders($type) {
+		switch($type){
+			case 'missedcall':
+				$headers = array();
+				$headers['username'] = array(
+					'required' => true,
+					'identifier' => _("username"),
+					'description' => _("The user name of missedcall")
+				);
+				$headers['notification'] = array(
+					'required' => false,
+					'identifier' => _("notification"),
+					'description' => _("notification of missedcall")
+				);
+				$headers['extension'] = array(
+					'required' => false,
+					'identifier' => _("extension"),
+					'description' => _("extension of missedcall")
+				);
+				$headers['queue'] = array(
+					'required' => false,
+					'identifier' => _("queue"),
+					'description' => _("queue of missedcall")
+				);
+				$headers['ringgroup'] = array(
+					'required' => false,
+					'identifier' => _("ringgroup"),
+					'description' => _("ringgroup of missedcall")
+				);
+				$headers['internal'] = array(
+					'required' => false,
+					'identifier' => _("internal"),
+					'description' => _("internal of missedcall")
+				);
+				$headers['external'] = array(
+					'required' => false,
+					'identifier' => _("external"),
+					'description' => _("external of missedcall")
+				);
+			break;
+		}
+		return $headers;
+	}
+
+	public function bulkhandlerExport($type) {
+		$data = NULL;
+		switch ($type) {
+			case 'missedcall':
+				$sql = "SELECT m.userid,u.username,m.notification,m.extension,m.queue,m.ringgroup,m.internal,m.external FROM missedcall as m ";
+				$sql .="left join userman_users as u ON u.id=m.userid";
+				$stm = $this->db->prepare($sql);
+				$stm->execute();
+				$data = $stm->fetchall(\PDO::FETCH_ASSOC);
+			break;
+		}
+		return $data;
+	}
+
+	public function bulkhandlerImport($type, $rawData) {
+		$ret = NULL;
+		switch ($type) {
+			case 'missedcall':
+				if (is_array($rawData) && count($rawData) >0) {
+					foreach ($rawData as $data) {
+						$this->addMissedcallRow($data);
+					}
+				}
+				$ret = array(
+					'status' => true,
+				);
+			break;
+		}
+		return $ret;
+	}
+
+	public function addMissedcallRow($data) {
+		$params =array();
+		$params['userid'] = isset($data['userid'])? $data['userid'] :0;
+		$params['notification'] = isset($data['notification'])? $data['notification'] :NULL;
+		$params['extension'] = isset($data['extension'])? $data['extension'] :NULL;
+		$params['queue'] = isset($data['queue'])? $data['queue'] :NULL;
+		$params['ringgroup'] = isset($data['ringgroup'])? $data['ringgroup'] :NULL;
+		$params['internal'] = isset($data['internal'])? $data['internal'] :NULL;
+		$params['external'] = isset($data['external'])? $data['external'] :NULL;
+		$ret = true;
+		$sql = "SELECT COUNT(*) = 0 as is_new FROM missedcall WHERE userid = :userid";
+		$sth = $this->db->prepare($sql);
+		$sth->bindParam(":userid", $params['userid']);
+		$sth->execute();
+		$is_new = $sth->fetch();
+		$is_new = (bool) $is_new['is_new'];
+		if ($is_new)
+			$sql = "INSERT INTO missedcall (userid, notification, extension, queue, ringgroup, internal, external)
+					VALUES (:userid, :notification, :extension, :queue, :ringgroup, :internal, :external);";
+		else
+			$sql = "UPDATE missedcall SET userid = :userid, notification = :notification, extension = :extension, queue = :queue, ringgroup = :ringgroup,
+						internal = :internal, external = :external WHERE userid = :userid";
+		$stmt = $this->db->prepare($sql);
+		$ret = $stmt->execute($params);
+		return $ret;
+	}
 }
