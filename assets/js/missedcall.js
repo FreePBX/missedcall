@@ -30,7 +30,7 @@ $('#table').bootstrapTable({
 })
 
 $("#bulkyes").click(function (){
-	var chosen = $(`#table`).bootstrapTable("getSelections");
+	var chosen = $('#table').bootstrapTable("getSelections");
 	let notEnabled = 0;
 	Object.keys(chosen).forEach(key => {
 		if (!chosen[key].status.enabled) {
@@ -40,7 +40,7 @@ $("#bulkyes").click(function (){
 	if (notEnabled > 0) {
 		// Open confirmation modal
 		fpbxConfirm(
-			sprintf(_(`Are you sure you wish to enable missed call notification for %s users?`), notEnabled),
+			sprintf(_('Are you sure you wish to enable missed call notification for %s users?'), notEnabled),
 			_("Yes"), _("No"),
 			function () {
 				saveSelected("enable");
@@ -53,7 +53,7 @@ $("#bulkyes").click(function (){
 })
 
 $("#bulkno").click(function (){
-	var chosen = $(`#table`).bootstrapTable("getSelections");
+	var chosen = $('#table').bootstrapTable("getSelections");
 	let enabledUsers = 0;
 	Object.keys(chosen).forEach(key => {
 		if (chosen[key].status.enabled) {
@@ -63,7 +63,7 @@ $("#bulkno").click(function (){
 	if (enabledUsers > 0) {
 		// Open confirmation modal
 		fpbxConfirm(
-			sprintf(_(`Are you sure you wish to disable missed call notification for %s users?`), enabledUsers),
+			sprintf(_('Are you sure you wish to disable missed call notification for %s users?'), enabledUsers),
 			_("Yes"), _("No"),
 			function () {
 				saveSelected("disable");
@@ -85,7 +85,7 @@ function saveSelected(status) {
 
 	ext["extensions"]= sel;
 	$.ajax({
-		url: "ajax.php?module=missedcall&command=savebulk&status="+status,
+		url: sprintf("%s?module=missedcall&command=savebulk&status=%s", window.FreePBX.ajaxurl, status),
 		dataType:"json",
 		async: false,
 		data: ext,
@@ -156,10 +156,10 @@ function mctoggle(ext){
 	}
 	// Open confirmation modal
 	fpbxConfirm(
-		sprintf(_(`Are you sure you wish to %s missed call notification for this users?`), mcstate),
+		sprintf(_('Are you sure you wish to %s missed call notification for this users?'), mcstate),
 		_("Yes"), _("No"),
 		function () {
-			$.get("ajax.php?module=missedcall&command=toggleMC&extdisplay=" + ext + "&state=" + mcstate)
+			$.get(sprintf("%s?module=missedcall&command=toggleMC&extdisplay=%s&state=%s", window.FreePBX.ajaxurl, ext, mcstate))
 				.done(function () {
 					$("#table").bootstrapTable("refresh");
 					fpbxToast('Notification for ' + ext + ' ' + mcstate + 'd');
@@ -221,15 +221,15 @@ function is_email(email){
 }
 
 function editformatter(v,r) {
-	return '<a  id="action'+r.userid+'" class="button btn" href="/admin/config.php?display=missedcall&view=form&userid='+r.userid+'"><i class="fa fa-edit"></i>&nbsp;'+r.extension+'</a>';
+	return sprintf('<a id="action%s" class="button btn btn-block" href="/admin/config.php?display=missedcall&view=form&userid=%s"><i class="fa fa-edit"></i>&nbsp;%s</a>', r.userid, r.userid, r.extension);
 }
 
 function enabledformatter(v,r) {
 	email = is_email(r.email);
 	rows = '<span class="radioset">';
-	rows += '<input '+disabled+' type="radio" name="mctoggle'+r.status.ext+'" id="mctoggle'+r.status.ext+'yes" onclick="mctoggle('+r.userid+')" data-for="'+r.userid+'" '+(r.status.enabled == 1?'CHECKED':'')+'>';
+	rows += sprintf('<input %s type="radio" name="mctoggle%s" id="mctoggle%syes" onclick="mctoggle(%s)" data-for="%s" %s>', disabled, r.status.ext, r.status.ext, r.userid, r.userid, (r.status.enabled == 1 ? 'CHECKED' : ''));
 	rows += '<label for="mctoggle'+r.status.ext+'yes">'+_("Yes")+'</label>';
-	rows += '<input '+disabled+' type="radio" name="mctoggle'+r.status.ext+'" id="mctoggle'+r.status.ext+'no" onclick="mctoggle('+r.userid+')" data-for="'+r.userid+'" '+(r.status.enabled == 1?'':'CHECKED' )+' value="CHECKED">';
+	rows += sprintf('<input %s type="radio" name="mctoggle%s" id="mctoggle%sno" onclick="mctoggle(%s)" data-for="%s" %s value="CHECKED">', disabled, r.status.ext, r.status.ext, r.userid, r.userid, (r.status.enabled == 1 ? '' : 'CHECKED'));
 	rows += '<label for="mctoggle'+r.status.ext+'no">'+_("No")+'</label>';
 	rows += '</span>';
 	return rows;
@@ -253,7 +253,7 @@ $('#submitEmailSettings button[type=submit]').on('click', function (e) {
 	$.ajax({
 		type: "POST",
 		enctype: 'multipart/form-data',
-		url: "ajax.php?module=missedcall&command=saveEmailSettings",
+		url: sprintf("%s?module=missedcall&command=saveEmailSettings", window.FreePBX.ajaxurl),
 		data: formData,
 		cache: false,
 		contentType: false,
