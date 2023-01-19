@@ -298,7 +298,7 @@ class Missedcall extends FreePBX_Helpers implements BMO {
 						"ringgroup" => $ringgroup,
 					];
 				}
-				return $list;	
+				return $list;
 			case "saveEmailSettings":
 				return $this->saveEmailSettings($_REQUEST);			
 			default:
@@ -851,8 +851,11 @@ class Missedcall extends FreePBX_Helpers implements BMO {
 		}			
 		$stmt->execute();
 		$ret = $stmt->fetch(\PDO::FETCH_ASSOC);
-		$ret['email'] = $this->getEmail($ret['userid']);
-		$ret['enable'] = $ret['notification'];
+		if (! empty($ret))
+		{
+			$ret['email'] = $this->getEmail($ret['userid']);
+			$ret['enable'] = $ret['notification'];
+		}
 		return $ret;
 	}
 
@@ -897,10 +900,11 @@ class Missedcall extends FreePBX_Helpers implements BMO {
 		$stm = $this->db->prepare($query);
 		$stm->execute(array($id));
 		$result = $stm->fetch(\PDO::FETCH_ASSOC);
+
 		if (isset($result['userid'])) {
 			$sql = 'UPDATE `missedcall` SET `queue` = :queue, `ringgroup` = :ringgroup, `internal` = :internal, `external` = :external, `extension` = :extension WHERE `userid` = :userid';
 		} else {
-			$sql = 'INSERT INTO `missedcall` (`userid`,`extension`,`queue`,`ringgroup`,`internal`,`external`) VALUES (:userid, :extension,:queue,:ringgroup,:internal,:external)';
+			$sql = 'REPLACE INTO `missedcall` (`userid`,`extension`,`queue`,`ringgroup`,`internal`,`external`) VALUES (:userid, :extension,:queue,:ringgroup,:internal,:external)';
 		}
 		$stmt = $this->db->prepare($sql);
 		$stmt->bindParam(':userid', $id, \PDO::PARAM_INT);
