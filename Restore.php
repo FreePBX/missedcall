@@ -19,12 +19,14 @@ class Restore Extends Base\RestoreBase{
 			foreach($config["missedcall"] as $data){
 				if(!empty($data) && is_array($data)){
                     unset($data["followme"]);
+					$data[":userid"] = $data["userid"];   unset($data["userid"]);
+					$data[":notification"] = $data["notification"];   unset($data["notification"]);
 					$data[":extension"] = $data["extension"];   unset($data["extension"]);
 					$data[":queue"]     = $data["queue"]; 	    unset($data["queue"]);
 					$data[":ringgroup"] = $data["ringgroup"]; 	unset($data["ringgroup"]);
 					$data[":internal"]  = $data["internal"];	unset($data["internal"]);
                     $data[":external"]  = $data["external"];	unset($data["external"]);
-					$sql  			    = "INSERT INTO missedcall (`extension`, `queue`, `ringgroup` ,`internal` ,`external`) VALUES (:extension, :queue, :ringgroup, :internal, :external ) ";
+					$sql  			    = "INSERT INTO missedcall (`userid`,`notification`,`extension`, `queue`, `ringgroup` ,`internal` ,`external`) VALUES (:userid,:notification,:extension, :queue, :ringgroup, :internal, :external ) ";
 					$db->prepare($sql)->execute($data);
 				}
 			}
