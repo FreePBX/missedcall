@@ -17,16 +17,16 @@ var MissedcallC = UCPMC.extend({
 	 */
 	displayWidget: function(widget_id,dashboard_id) {
 		var self = this;
-		$(".grid-stack-item[data-id='"+widget_id+"'][data-rawname=missedcall] .widget-content input[name='enable']").change(function() {
+		$(".grid-stack-item[data-id='"+widget_id+"'][data-rawname=missedcall] .widget-content input[name='notification']").change(function() {
 			var extension = $(".grid-stack-item[data-id='"+widget_id+"'][data-rawname=missedcall]").data("widget_type_id"),
-				sidebar = $(".widget-extra-menu[data-module='missedcall'][data-widget_type_id='"+extension+"']:visible input[name='enable']"),
+				sidebar = $(".widget-extra-menu[data-module='missedcall'][data-widget_type_id='"+extension+"']:visible input[name='notification']"),
 				checked = $(this).is(':checked'),
 				data = {};
 			if(sidebar.length && sidebar.is(":checked") !== checked) {
 				var state = checked ? "on" : "off";
 				sidebar.bootstrapToggle(state);
 			}
-			data["enable"] = checked ? 1 : 0;
+			data["notification"] = checked ? 1 : 0;
 			self.saveSettings(data);
 		});
 

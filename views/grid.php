@@ -29,7 +29,7 @@
 		<tr>
 			<th data-field="state" data-checkbox="true"></th>
 			<th data-width="150"  data-sortable="true" data-field="username"><?php echo _("Username")?></th>			
-			<th data-width="150" data-formatter="editformatter" data-sortable="true" data-field="userid"><?php echo _("Extension")?></th>
+			<th data-width="150" data-formatter="editformatter" data-sortable="true" data-field="extension"><?php echo _("Extension")?></th>
 			<th data-field="email"><?php echo _("Email")?></th>
 			<th data-width="50" data-align="center" data-field="internal"><?php echo _("Internal")?></th>
 			<th data-width="50" data-align="center" data-field="external"><?php echo _("External")?></th>

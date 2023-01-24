@@ -14,10 +14,10 @@
 	</div>
     <div class="mcrg parent">
 		<div><?php echo _('Calls from Ring Groups')?></div>
-		<input <?php echo $rgstatus ?> class="mcringgroup" type="checkbox" name="ringgroup" data-type="ringgroup" data-toggle="toggle" <?php echo (trim($ringgroup) == "1") ? 'checked' : ''?> data-on="<?php echo _("Enabled")?>" data-off="<?php echo _("Disabled")?>">
+		<input  class="mcringgroup" type="checkbox" name="ringgroup" data-type="ringgroup" data-toggle="toggle" <?php echo (trim($ringgroup) == "1") ? 'checked' : ''?> data-on="<?php echo _("Enabled")?>" data-off="<?php echo _("Disabled")?>">
 	</div>
     <div class="mcqu parent">
 		<div><?php echo _('Calls from Queues')?></div>
-		<input <?php echo $qstatus ?> class="mcqueue" type="checkbox" name="queue" data-type="queue" data-toggle="toggle" <?php echo (trim($queue) == "1") ? 'checked' : ''?> data-on="<?php echo _("Enabled")?>" data-off="<?php echo _("Disabled")?>">
+		<input class="mcqueue" type="checkbox" name="queue" data-type="queue" data-toggle="toggle" <?php echo (trim($queue) == "1") ? 'checked' : ''?> data-on="<?php echo _("Enabled")?>" data-off="<?php echo _("Disabled")?>">
 	</div>
 </div>

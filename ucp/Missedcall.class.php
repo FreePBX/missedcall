@@ -102,21 +102,6 @@ class Missedcall extends Modules {
 				$user 		= $this->user;
 				$ext 		= !empty($user["default_extension"]) ? $user["default_extension"] : Null;
 				$mc_params 	= $this->mc->get($user['id']);
-				$user 	  	= $this->userman->getUserByDefaultExtension($ext);
-				$mcq  		= $this->userman->getCombinedModuleSettingByID($user['id'],'missedcall','mcq', false, true);
-				$mcrg		= $this->userman->getCombinedModuleSettingByID($user['id'],'missedcall','mcrg',false, true);
-
-				$rgstatus = "";
-				if($mcrg == "0" || empty($mcrg) ){
-					$mc_params["ringgroup"] = false;
-					$rgstatus = "disabled";
-				}
-			
-				$qstatus = "";
-				if($mcq == "0" || empty($mcq) ){	
-					$mc_params['queue'] = false;
-					$qstatus = "disabled";
-				}
 
 				$displayvars= array(
 					"notification" 	=> $mc_params["notification"], 
@@ -124,8 +109,6 @@ class Missedcall extends Modules {
 					"external" 	=> $mc_params["external"],  
 					"ringgroup" => $mc_params["ringgroup"],  
 					"queue" 	=> $mc_params["queue"],
-					"qstatus"	=> $qstatus,
-					"rgstatus"	=> $rgstatus,
 				);
 				
 				$widget = array(
@@ -201,10 +184,28 @@ class Missedcall extends Modules {
 						$value = htmlentities($value);
 						switch($key){
 							case "queue":
+									$umkey = 'mcq';
+									$type	= $key;
+									$val 	= $value;
+								break;
 							case "ringgroup":
+								$umkey = 'mcrg';
+								$type	= $key;
+								$val 	= $value;
+								break;
+
 							case "internal":
+								$umkey = 'mci';
+								$type	= $key;
+								$val 	= $value;
+								break;
 							case "external":
+								$umkey = 'mcx';
+								$type	= $key;
+								$val 	= $value;
+								break;
 							case "notification":
+								$umkey = 'mcenabled';
 								$type	= $key;
 								$val 	= $value;
 							break;
@@ -213,7 +214,13 @@ class Missedcall extends Modules {
 						}
 					}
 
-					$this->mc->updateOne($ext,$type,$val,$user['id']);
+					$this->mc->updateOne($user['id'],$type,$val);
+					if($val ==1){ 
+						$umval = true;
+					} else {
+						$umval = false;
+					}
+					$this->userman->setModuleSettingByID($user['id'],'missedcall',$umkey,$val);
 					return array("status" => true, "alert" => "success", "message" => _('Saved'));
 				}
 				return array("status" => false, "alert" => "Error", "message" => sprintf( _("Bad extension: '%s'!"), $ext));
