@@ -222,7 +222,6 @@ function is_email(email){
 
 function editformatter(v,r) {
 	return '<a  id="action'+r.userid+'" class="button btn" href="/admin/config.php?display=userman&action=showuser&user='+r.userid+'&#usermanhookmissedcall"><i class="fa fa-edit"></i>&nbsp;'+r.extension+'</a>';
-
 }
 
 function enabledformatter(v,r) {
