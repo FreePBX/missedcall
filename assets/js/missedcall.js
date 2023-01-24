@@ -33,7 +33,7 @@ $("#bulkyes").click(function (){
 	var chosen = $('#table').bootstrapTable("getSelections");
 	let notEnabled = 0;
 	Object.keys(chosen).forEach(key => {
-		if (!chosen[key].status.enabled) {
+		if (!chosen[key].status.userid) {
 			notEnabled++;
 		}
 	});
@@ -221,7 +221,7 @@ function is_email(email){
 }
 
 function editformatter(v,r) {
-	return sprintf('<a id="action%s" class="button btn btn-block" href="/admin/config.php?display=missedcall&view=form&userid=%s"><i class="fa fa-edit"></i>&nbsp;%s</a>', r.userid, r.userid, r.extension);
+	return '<a  id="action'+r.userid+'" class="button btn" href="/admin/config.php?display=userman&action=showuser&user='+r.userid+'&#usermanhookmissedcall"><i class="fa fa-edit"></i>&nbsp;'+r.extension+'</a>';
 }
 
 function enabledformatter(v,r) {
