@@ -240,12 +240,12 @@ class Missedcall extends FreePBX_Helpers implements BMO {
 				switch($_REQUEST["status"]){
 					case "enable":
 						foreach($_REQUEST["extensions"] as $key => $userid){
-							$this->misscallEnable($userid);
+							$this->updateOne($userid,'notification',1,[],true);
 						}
 						return ["status" => true, "message" => _("Success.")];
 					case "disable":
 						foreach($_REQUEST["extensions"] as $key => $userid){
-							$this->misscallDisable($userid);
+							$this->updateOne($userid,'notification',0,[],true);
 						}
 						return ["status" => true, "message" => _("Success.")];
 					default:
@@ -282,17 +282,20 @@ class Missedcall extends FreePBX_Helpers implements BMO {
 					$external	= $mc_params['external'] == "1" 	? '<i class="fa fa-check-circle text-success"></i>' : '<i class="fa fa-times-circle text-danger"></i>' ;
 					$queue 		= $mc_params['queue'] 	 == "1" 	? '<i class="fa fa-check-circle text-success"></i>' : '<i class="fa fa-times-circle text-danger"></i>' ;
 					$ringgroup 	= $mc_params['ringgroup']== "1" 	? '<i class="fa fa-check-circle text-success"></i>' : '<i class="fa fa-times-circle text-danger"></i>' ;
-					$details	= [ "ext" => $ext, "enabled" => $this->getStatus($id), "email" => $mc_params['email'] ];
+					$enabled 	= $mcenabled== "1" 	? '<i class="fa fa-check-circle text-success"></i>' : '<i class="fa fa-times-circle text-danger"></i>' ;
+					
+					//$details	= [ "ext" => $ext, "enabled" => $this->getStatus($id), "email" => $mc_params['email'] ];
 					$list[] = [ 
 						"userid" =>$id,
 						"username" =>$user['username'],
 						"extension" => $ext, 
-						"status" 	=> $details,
+						//"status" 	=> $details,
 						"email" 	=> $mc_params['email'],
 						"internal" 	=> $internal,
 						"external" 	=> $external,
 						"queue" 	=> $queue,
 						"ringgroup" => $ringgroup,
+						"notification" =>$enabled
 					];
 				}
 				return $list;
@@ -360,9 +363,9 @@ class Missedcall extends FreePBX_Helpers implements BMO {
 		foreach ($users as $id){
 			if($setting == 'notification'){
 				$mcenabled=	$this->userman->getCombinedModuleSettingByID($id,'missedcall','mcenabled');
-				if($mcenabled){dbug("calling update one true");
+				if($mcenabled){
 					$this->updateOne($id,'notification',1);
-				} else {dbug("calling update one false");
+				} else {
 					$this->updateOne($id,'notification',0);
 				}
 			}
@@ -401,7 +404,7 @@ class Missedcall extends FreePBX_Helpers implements BMO {
 		}
 	}
 
-	public function usermanUpdateGroup($id,$display,$data) {dbug($data);dbug($id);dbug($display);
+	public function usermanUpdateGroup($id,$display,$data) {
 		if($display == 'userman' && isset($_POST['type']) && $_POST['type'] == 'group') {
 			if(isset($_POST['mcenabled'])) {
 				if($_POST['mcenabled'] == "true") {
@@ -495,7 +498,7 @@ class Missedcall extends FreePBX_Helpers implements BMO {
 					if($mcenabled){
 						$this->updateOne($id,'notification',1);
 					} else {
-						$this->updateOne($id,'notification',1);
+						$this->updateOne($id,'notification',0);
 					}
 				}
 			}
@@ -879,7 +882,7 @@ class Missedcall extends FreePBX_Helpers implements BMO {
 	 * @param string $exten
 	 * @return
 	 */
-	public function misscallEnable($userid,$dbinsert = false) {
+	public function misscallEnable($userid,$dbinsert = false,$from = false) {
 		$user = $this->userman->getUserByID($userid);
 		$exten = $user['default_extension'];
 		// disable in DB
@@ -891,7 +894,9 @@ class Missedcall extends FreePBX_Helpers implements BMO {
 		$stmt = $this->db->prepare($sql);
 		$stmt->execute(array(':userid'=>$userid,':ext'=>$exten,':value'=>1));
 		//update the Userman
-		$this->userman->setModuleSettingByID($userid,'missedcall','mcenabled',true);
+		if($from){
+			$this->userman->setModuleSettingByID($userid,'missedcall','mcenabled',true);
+		}
 		$response = $this->FreePBX->astman->database_put("AMPUSER","$exten/missedcall", "enable");
 		return $response;
 	}
@@ -901,7 +906,7 @@ class Missedcall extends FreePBX_Helpers implements BMO {
 	 * @param string $exten
 	 * @return
 	 */
-	public function misscallDisable($userid,$dbinsert = false) {
+	public function misscallDisable($userid,$dbinsert = false,$from = false) {
 		$user = $this->userman->getUserByID($userid);
 		$exten = $user['default_extension'];
 		// disable in DB
@@ -910,11 +915,11 @@ class Missedcall extends FreePBX_Helpers implements BMO {
 		} else {
 			$sql = "UPDATE `missedcall` SET `extension`= :ext ,`notification` = :value WHERE `userid` = :userid";
 		}
-		$stmt = $this->db->prepare($sql);dbug($sql);
+		$stmt = $this->db->prepare($sql);
 		$stmt->execute(array(':userid'=>$userid,':ext'=>$exten,':value'=>0));
-		dbug(array(':userid'=>$userid,':ext'=>$exten,':value'=>0));
-		$this->userman->setModuleSettingByID($userid,'missedcall','mcenabled',false);
-
+		if($from){
+			$this->userman->setModuleSettingByID($userid,'missedcall','mcenabled',false);
+		}
 		$response = $this->FreePBX->astman->database_put("AMPUSER","$exten/missedcall", "disable");
 		return $response;
 	}
@@ -927,10 +932,10 @@ class Missedcall extends FreePBX_Helpers implements BMO {
 	public function Toggle($id) {
 		$status 	= $this->getStatus($id);
 		if ($status == 0) {
-			$resp = $this->misscallEnable($id);
+			$resp = $this->misscallEnable($id,false,true);
 			return 'enable';
 		} else {
-			$resp = $this->misscallDisable($id);
+			$resp = $this->misscallDisable($id,false,true);
 			return 'disable';
 		}
 	}
@@ -1020,7 +1025,7 @@ class Missedcall extends FreePBX_Helpers implements BMO {
 		return;
 	}
 
-	public function updateOne($userid,$type,$value,$data=[]){
+	public function updateOne($userid,$type,$value,$data=[],$umupdate=false){
 		// check to see if this is a new record or updating old record
 		$query = "SELECT * from missedcall where userid = ?";
 		$stm = $this->db->prepare($query);
@@ -1030,11 +1035,11 @@ class Missedcall extends FreePBX_Helpers implements BMO {
 		if(!isset($result['userid'])){
 			$dbinsert = true;
 		}
-		if($type == "enable" || $type == "notification" ) {dbug(" update one calling missedcallenable=".$value);
+		if($type == "enable" || $type == "notification" ) {
 			if ($value == 1) {
-				$this->misscallEnable($userid,$dbinsert);
+				$this->misscallEnable($userid,$dbinsert,$umupdate);
 			} else {
-				$this->misscallDisable($userid,$dbinsert);
+				$this->misscallDisable($userid,$dbinsert,$umupdate);
 			}
 			return;
 		}
