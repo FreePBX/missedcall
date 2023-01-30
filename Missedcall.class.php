@@ -284,12 +284,10 @@ class Missedcall extends FreePBX_Helpers implements BMO {
 					$ringgroup 	= $mc_params['ringgroup']== "1" 	? '<i class="fa fa-check-circle text-success"></i>' : '<i class="fa fa-times-circle text-danger"></i>' ;
 					$enabled 	= $mcenabled== "1" 	? '<i class="fa fa-check-circle text-success"></i>' : '<i class="fa fa-times-circle text-danger"></i>' ;
 					
-					//$details	= [ "ext" => $ext, "enabled" => $this->getStatus($id), "email" => $mc_params['email'] ];
 					$list[] = [ 
 						"userid" =>$id,
 						"username" =>$user['username'],
 						"extension" => $ext, 
-						//"status" 	=> $details,
 						"email" 	=> $mc_params['email'],
 						"internal" 	=> $internal,
 						"external" 	=> $external,
