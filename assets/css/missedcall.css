@@ -1,0 +1,16 @@
+.text-success {
+    color: green !important;
+}
+
+.text-danger {
+    color: red !important;
+}
+
+.bootstrap-table td:nth-last-child(-n+5) i.fa {
+    font-size: 18px;
+    margin-right: 5px;
+}
+
+.bootstrap-table td:nth-last-child(-n+5) {
+    vertical-align: middle !important;
+}
