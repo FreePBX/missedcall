@@ -33,7 +33,7 @@ $("#bulkyes").click(function (){
 	var chosen = $('#table').bootstrapTable("getSelections");
 	let notEnabled = 0;
 	Object.keys(chosen).forEach(key => {
-		if (!chosen[key].status.userid) {
+		if (chosen[key].userid) {
 			notEnabled++;
 		}
 	});
@@ -56,7 +56,7 @@ $("#bulkno").click(function (){
 	var chosen = $('#table').bootstrapTable("getSelections");
 	let enabledUsers = 0;
 	Object.keys(chosen).forEach(key => {
-		if (chosen[key].status.enabled) {
+		if (chosen[key].userid) {
 			enabledUsers++;
 		}
 	});
@@ -82,7 +82,6 @@ function saveSelected(status) {
 	$.each(selected, function(index, value){
 		sel[index]=value.userid;
 	})
-
 	ext["extensions"]= sel;
 	$.ajax({
 		url: sprintf("%s?module=missedcall&command=savebulk&status=%s", window.FreePBX.ajaxurl, status),

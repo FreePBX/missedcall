@@ -35,7 +35,7 @@
 			<th data-width="50" data-align="center" data-field="external"><?php echo _("External")?></th>
 			<th data-width="50" data-align="center" data-field="queue"><?php echo _("Queue")?></th>
 			<th data-width="50" data-align="center" data-field="ringgroup"><?php echo _("Ring Group")?></th>
-			<th data-width="150" data-align="center" data-formatter="enabledformatter" data-field="userid"><?php echo _("Enabled")?></th>
+			<th data-width="50" data-align="center" data-field="notification"><?php echo _("Enabled")?></th>
 		</tr>
 	</thead>
 	<tbody>

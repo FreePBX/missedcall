@@ -81,7 +81,7 @@
 	if ($enabled && $extension != 's') {
 		switch ($enabled) {
 			case "enable":
-				$foo = $mc->misscallEnable($userid);
+				$foo = $mc->misscallEnable($userid,false,true);
 				$agi->answer();
 				$agi->stream_file("missed");
 				$agi->stream_file("call");
@@ -90,7 +90,7 @@
 				log_write("Missed call notify for $extension set to enable");
 			break;
 			case "disable":
-				$foo = $mc->misscallDisable($userid);
+				$foo = $mc->misscallDisable($userid,false,true);
 				$agi->answer();
 				$agi->stream_file("missed");
 				$agi->stream_file("call");
