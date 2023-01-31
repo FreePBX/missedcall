@@ -461,7 +461,9 @@ class Missedcall extends FreePBX_Helpers implements BMO {
 	 * @param {array} $data    Array of data to be able to use
 	 */
 	public function usermanDelUser($id, $display, $data) {
-		$this->deleteUser($id);
+		$sql = "DELETE FROM `missedcall` WHERE `userid` = :userid";
+		$stmt = $this->db->prepare($sql);
+		$stmt->execute(array(':userid'=>$id));dbug($sql);dbug($id);
 	}
 
 	/**
@@ -1301,39 +1303,39 @@ class Missedcall extends FreePBX_Helpers implements BMO {
 			case 'missedcall':
 				$headers = array();
 				$headers['username'] = array(
-					'required' => true,
+					'required' => false,
 					'identifier' => _("username"),
 					'description' => _("The user name of missedcall")
 				);
-				$headers['notification'] = array(
-					'required' => false,
-					'identifier' => _("notification"),
-					'description' => _("notification of missedcall")
-				);
 				$headers['extension'] = array(
-					'required' => false,
+					'required' => true,
 					'identifier' => _("extension"),
-					'description' => _("extension of missedcall")
+					'description' => _("extension of user ,user will be identified using this extension")
+				);
+				$headers['enabled'] = array(
+					'required' => false,
+					'identifier' => _("enabled"),
+					'description' => _("notification of missedcall,leave blank to inherit from group")
 				);
 				$headers['queue'] = array(
 					'required' => false,
 					'identifier' => _("queue"),
-					'description' => _("queue of missedcall")
+					'description' => _("Notify queue missedcall,leave blank to inherit from group")
 				);
 				$headers['ringgroup'] = array(
 					'required' => false,
 					'identifier' => _("ringgroup"),
-					'description' => _("ringgroup of missedcall")
+					'description' => _("Notify ringgroup missedcall,leave blank to inherit from group")
 				);
 				$headers['internal'] = array(
 					'required' => false,
 					'identifier' => _("internal"),
-					'description' => _("internal of missedcall")
+					'description' => _("Notify internal  missedcall,leave blank to inherit from group")
 				);
 				$headers['external'] = array(
 					'required' => false,
 					'identifier' => _("external"),
-					'description' => _("external of missedcall")
+					'description' => _("Notify external missedcall,leave blank to inherit from group")
 				);
 			break;
 		}
@@ -1344,12 +1346,22 @@ class Missedcall extends FreePBX_Helpers implements BMO {
 		$data = NULL;
 		switch ($type) {
 			case 'missedcall':
-				$sql = "SELECT m.userid,u.username,m.notification,m.extension,m.queue,m.ringgroup,m.internal,m.external FROM missedcall as m ";
-				$sql .="left join userman_users as u ON u.id=m.userid";
-				$stm = $this->db->prepare($sql);
-				$stm->execute();
-				$data = $stm->fetchall(\PDO::FETCH_ASSOC);
+				$data = $this->fetchAllUserAndSettings();
 			break;
+		}
+		return $data;
+	}
+	/* this will pull all missedcall setting from userman */
+	public function fetchAllUserAndSettings(){
+		$users = $this->getUsers();
+		$data = [];
+		foreach($users as $id => $ext){
+			$data[$id]['extension'] = $ext;
+			$data[$id]['enabled'] = $this->userman->getModuleSettingByID($id,'missedcall','mcenabled',$null=true,$cached=true);
+			$data[$id]['ringgroup'] = $this->userman->getModuleSettingByID($id,'missedcall','mcrg',$null=true,$cached=true);
+			$data[$id]['queue'] = $this->userman->getModuleSettingByID($id,'missedcall','mcq',$null=true,$cached=true);
+			$data[$id]['internal'] = $this->userman->getModuleSettingByID($id,'missedcall','mci',$null=true,$cached=true);
+			$data[$id]['external'] = $this->userman->getModuleSettingByID($id,'missedcall','mcx',$null=true,$cached=true);
 		}
 		return $data;
 	}
@@ -1360,7 +1372,7 @@ class Missedcall extends FreePBX_Helpers implements BMO {
 			case 'missedcall':
 				if (is_array($rawData) && count($rawData) >0) {
 					foreach ($rawData as $data) {
-						$this->addMissedcallRow($data);
+						$ret = $this->addMissedcallRow($data);
 					}
 				}
 				$ret = array(
@@ -1373,28 +1385,114 @@ class Missedcall extends FreePBX_Helpers implements BMO {
 
 	public function addMissedcallRow($data) {
 		$params =array();
-		$params['userid'] = isset($data['userid'])? $data['userid'] :0;
-		$params['notification'] = isset($data['notification'])? $data['notification'] :NULL;
-		$params['extension'] = isset($data['extension'])? $data['extension'] :NULL;
-		$params['queue'] = isset($data['queue'])? $data['queue'] :NULL;
-		$params['ringgroup'] = isset($data['ringgroup'])? $data['ringgroup'] :NULL;
-		$params['internal'] = isset($data['internal'])? $data['internal'] :NULL;
-		$params['external'] = isset($data['external'])? $data['external'] :NULL;
-		$ret = true;
-		$sql = "SELECT COUNT(*) = 0 as is_new FROM missedcall WHERE userid = :userid";
-		$sth = $this->db->prepare($sql);
-		$sth->bindParam(":userid", $params['userid']);
-		$sth->execute();
-		$is_new = $sth->fetch();
-		$is_new = (bool) $is_new['is_new'];
-		if ($is_new)
-			$sql = "INSERT INTO missedcall (userid, notification, extension, queue, ringgroup, internal, external)
-					VALUES (:userid, :notification, :extension, :queue, :ringgroup, :internal, :external);";
-		else
-			$sql = "UPDATE missedcall SET userid = :userid, notification = :notification, extension = :extension, queue = :queue, ringgroup = :ringgroup,
-						internal = :internal, external = :external WHERE userid = :userid";
-		$stmt = $this->db->prepare($sql);
-		$ret = $stmt->execute($params);
-		return $ret;
+		if(!isset($data['extension'])){
+			return false;
+		}
+		//getuserid by exten
+		$user = $this->userman->getUserByDefaultExtension($data['extension']);
+		$userid = $user['id'];
+		$notification = isset($data['enabled'])? $data['enabled'] :'null';
+		$this->updateUsermanAndMissedcall($userid,'notification',$notification);
+		$queue = isset($data['queue'])? $data['queue'] :'null';
+		$this->updateUsermanAndMissedcall($userid,'queue',$queue);
+		$ringgroup = isset($data['ringgroup'])? $data['ringgroup'] :'null';
+		$this->updateUsermanAndMissedcall($userid,'ringgroup',$ringgroup);
+		$internal = isset($data['internal'])? $data['internal'] :'null';
+		$this->updateUsermanAndMissedcall($userid,'internal',$internal);
+		$external = isset($data['external'])? $data['external'] :'null';
+		$this->updateUsermanAndMissedcall($userid,'external',$external);
+		return true;
+	}
+
+	public function updateUsermanAndMissedcall($id,$setting,$value='null'){
+		if($setting =='notification' ) {
+			if($value == "1") {
+				$this->userman->setModuleSettingByID($id,'missedcall','mcenabled',true);
+				$this->updateOne($id,'notification',1);
+			} elseif($value =="0") {
+				$this->userman->setModuleSettingByID($id,'missedcall','mcenabled',false);
+				$this->updateOne($id,'notification',0);
+			} else {
+				$this->userman->setModuleSettingByID($id,'missedcall','mcenabled',null);
+				//getcombined settings
+				$mcenabled=	$this->userman->getCombinedModuleSettingByID($id,'missedcall','mcenabled');
+				if($mcenabled){
+					$this->updateOne($id,'notification',1);
+				} else {
+					$this->updateOne($id,'notification',0);
+				}
+			}
+		}
+
+		if($setting =='ringgroup') {
+			if($value == "1") {
+				$this->userman->setModuleSettingByID($id,'missedcall','mcrg',true);
+				$this->updateOne($id,'ringgroup',1);
+			} elseif($value == "0") {
+				$this->userman->setModuleSettingByID($id,'missedcall','mcrg',false);
+				$this->updateOne($id,'ringgroup',0);
+			} else {
+				$this->userman->setModuleSettingByID($id,'missedcall','mcrg',"");
+				//getcombined settings
+				$mcrg =	$this->userman->getCombinedModuleSettingByID($id,'missedcall','mcrg');
+				if($mcrg){
+					$this->updateOne($id,'ringgroup',1);
+				} else {
+					$this->updateOne($id,'ringgroup',0);
+				}
+			}
+		}
+
+		if($setting == 'queue') {
+			if($value == "1") {
+				$this->userman->setModuleSettingByID($id,'missedcall','mcq',true);
+				$this->updateOne($id,'queue',1);
+			} elseif($value == "0") {
+				$this->userman->setModuleSettingByID($id,'missedcall','mcq',false);
+				$this->updateOne($id,'queue',0);
+			} else {
+				$this->userman->setModuleSettingByID($id,'missedcall','mcq',null);
+				$mcq =	$this->userman->getCombinedModuleSettingByID($id,'missedcall','mcq');
+				if($mcq){
+					$this->updateOne($id,'queue',1);
+				} else {
+					$this->updateOne($id,'queue',0);
+				}
+			}
+		}
+		if($setting =='internal') {
+				if($value =="1") {
+					$this->userman->setModuleSettingByID($id,'missedcall','mci',true);
+					$this->updateOne($id,'internal',1);
+				} elseif($value =="0") {
+					$this->userman->setModuleSettingByID($id,'missedcall','mci',false);
+					$this->updateOne($id,'internal',0);
+				} else {
+					$this->userman->setModuleSettingByID($id,'missedcall','mci',null);
+					$mci =	$this->userman->getCombinedModuleSettingByID($id,'missedcall','mci');
+					if($mci){
+						$this->updateOne($id,'internal',1);
+					} else {
+						$this->updateOne($id,'internal',0);
+					}
+				}
+			}
+		if($setting =='external') {
+				if($value =="1") {
+					$this->userman->setModuleSettingByID($id,'missedcall','mcx',true);
+					$this->updateOne($id,'external',1);
+				} elseif($value =="0") {
+					$this->userman->setModuleSettingByID($id,'missedcall','mcx',false);
+					$this->updateOne($id,'external',0);
+				} else {
+					$this->userman->setModuleSettingByID($id,'missedcall','mcx',null);
+					$mcx =	$this->userman->getCombinedModuleSettingByID($id,'missedcall','mcx');
+					if($mcx){
+						$this->updateOne($id,'external',1);
+					} else {
+						$this->updateOne($id,'external',0);
+					}
+				}
+			}
 	}
 }
