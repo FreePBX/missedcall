@@ -6,7 +6,7 @@ class Backup Extends Base\BackupBase{
 		/**
          * Backup missecall data
          */
-		$config["missedcall"]   = $this->FreePBX->Missedcall->getAllUsers();
+		$config["data"]   = $this->FreePBX->Missedcall->fetchAllUserAndSettings();;
 		$config['features']     = $this->dumpFeatureCodes();
 
 		$this->addConfigs($config);

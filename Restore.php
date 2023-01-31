@@ -15,19 +15,10 @@ class Restore Extends Base\RestoreBase{
 		$sql		= "TRUNCATE TABLE missedcall;";
 		$db->prepare($sql)->execute();
 
-		if(!empty($config["missedcall"])){
-			foreach($config["missedcall"] as $data){
+		if(!empty($config["data"])){
+			foreach($config["data"] as $data){
 				if(!empty($data) && is_array($data)){
-                    unset($data["followme"]);
-					$data[":userid"] = $data["userid"];   unset($data["userid"]);
-					$data[":notification"] = $data["notification"];   unset($data["notification"]);
-					$data[":extension"] = $data["extension"];   unset($data["extension"]);
-					$data[":queue"]     = $data["queue"]; 	    unset($data["queue"]);
-					$data[":ringgroup"] = $data["ringgroup"]; 	unset($data["ringgroup"]);
-					$data[":internal"]  = $data["internal"];	unset($data["internal"]);
-                    $data[":external"]  = $data["external"];	unset($data["external"]);
-					$sql  			    = "INSERT INTO missedcall (`userid`,`notification`,`extension`, `queue`, `ringgroup` ,`internal` ,`external`) VALUES (:userid,:notification,:extension, :queue, :ringgroup, :internal, :external ) ";
-					$db->prepare($sql)->execute($data);
+					$this->FreePBX->Missedcall->addMissedcallRow($data);
 				}
 			}
 		}

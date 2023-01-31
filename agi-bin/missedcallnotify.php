@@ -130,7 +130,7 @@
 	$mc_params = $mc->get($extension,'byEXT');
 	$mcgroup = get_var($agi,"MCGROUP");
 	// if notifications are disabled for ringing extension, can exit immediately
-	if ($mc_params['notification'] == 0   &&  $queuecall == "" || $mcgroup == "") {
+	if (($extension !="" && $mc_params['notification'] == 0)  && ( $queuecall == "" || $mcgroup == "")) {
 		log_write("Notifications disabled for $extension, exiting");
 		exit;
 	}

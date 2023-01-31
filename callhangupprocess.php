@@ -55,7 +55,7 @@ $linkedid = $json['uniqueid'];
 				if($queue) {
 					$calltype = $dialsts['CallType'].'(Queue)';
 				} elseif ($ringgroup){
-					$calltype = $dialsts['CallType'].'(Ringgroup))';
+					$calltype = $dialsts['CallType'].'(Ringgroup)';
 				} else {
 					$calltype = $dialsts['CallType'];
 				}

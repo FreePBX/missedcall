@@ -58,7 +58,7 @@
 	</div>
 	<div class="row">
 		<div class="col-md-12">
-			<span id="mcrg-help" class="help-block fpbx-help-block"><?php echo _('Allow user to Change the Ring Group call settings')?></span>
+			<span id="mcrg-help" class="help-block fpbx-help-block"><?php echo _('Ringgroup call notification')?></span>
 		</div>
 	</div>
 </div>
@@ -88,7 +88,7 @@
 	</div>
 	<div class="row">
 		<div class="col-md-12">
-			<span id="mcq-help" class="help-block fpbx-help-block"><?php echo _('Allow user to Change the Queue call settings')?></span>
+			<span id="mcq-help" class="help-block fpbx-help-block"><?php echo _('Queue call notification')?></span>
 		</div>
 	</div>
 </div>
@@ -117,7 +117,7 @@
 	</div>
 	<div class="row">
 		<div class="col-md-12">
-			<span id="mci-help" class="help-block fpbx-help-block"><?php echo _('Allow user to Change the Internal call settings')?></span>
+			<span id="mci-help" class="help-block fpbx-help-block"><?php echo _('Internal call notification')?></span>
 		</div>
 	</div>
 </div>
@@ -146,7 +146,7 @@
 	</div>
 	<div class="row">
 		<div class="col-md-12">
-			<span id="mcx-help" class="help-block fpbx-help-block"><?php echo _('Allow user to Change the external call settings')?></span>
+			<span id="mcx-help" class="help-block fpbx-help-block"><?php echo _('External call notification')?></span>
 		</div>
 	</div>
 </div>
