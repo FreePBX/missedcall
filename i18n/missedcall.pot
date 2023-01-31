@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-30 07:22+0000\n"
+"POT-Creation-Date: 2023-01-31 10:59+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -31,22 +31,6 @@ msgstr ""
 
 #: views/ucp_config.php:28
 msgid "Allow this user to receive an email for any missed call."
-msgstr ""
-
-#: views/missedcall.php:120
-msgid "Allow user to Change the Internal call settings"
-msgstr ""
-
-#: views/missedcall.php:91
-msgid "Allow user to Change the Queue call settings"
-msgstr ""
-
-#: views/missedcall.php:61
-msgid "Allow user to Change the Ring Group call settings"
-msgstr ""
-
-#: views/missedcall.php:149
-msgid "Allow user to Change the external call settings"
 msgstr ""
 
 #: assets/js/missedcall.js:158
@@ -120,19 +104,19 @@ msgstr ""
 msgid "Email Settings"
 msgstr ""
 
-#: Missedcall.class.php:1228
+#: Missedcall.class.php:1230
 msgid "Email body is required"
 msgstr ""
 
-#: Missedcall.class.php:1240
+#: Missedcall.class.php:1242
 msgid "Email settings saved successfully"
 msgstr ""
 
-#: Missedcall.class.php:1224
+#: Missedcall.class.php:1226
 msgid "Email subject is required"
 msgstr ""
 
-#: Missedcall.class.php:1218
+#: Missedcall.class.php:1220
 msgid "Email type is required"
 msgstr ""
 
@@ -169,7 +153,7 @@ msgstr ""
 #: ucp/views/widget.php:13
 #: ucp/views/widget.php:17
 #: ucp/views/widget.php:21
-#: views/grid.php:38
+#: views/grid.php:34
 #: views/missedcall.php:12
 #: views/rnav.php:25
 msgid "Enabled"
@@ -191,7 +175,7 @@ msgstr ""
 msgid "Extensions"
 msgstr ""
 
-#: views/grid.php:35
+#: views/grid.php:38
 msgid "External"
 msgstr ""
 
@@ -200,11 +184,15 @@ msgstr ""
 msgid "External Calls"
 msgstr ""
 
+#: views/missedcall.php:149
+msgid "External call notification"
+msgstr ""
+
 #: page.missedcall.php:51
 msgid "For more information see: "
 msgstr ""
 
-#: Missedcall.class.php:1294
+#: Missedcall.class.php:1296
 msgid "Import/Export missedcall"
 msgstr ""
 
@@ -217,13 +205,17 @@ msgstr ""
 msgid "Inherit"
 msgstr ""
 
-#: views/grid.php:34
+#: views/grid.php:37
 msgid "Internal"
 msgstr ""
 
 #: ucp/views/widget.php:8
 #: views/form.php:69
 msgid "Internal Calls"
+msgstr ""
+
+#: views/missedcall.php:120
+msgid "Internal call notification"
 msgstr ""
 
 #: assets/js/missedcall.js:176
@@ -240,22 +232,22 @@ msgstr ""
 msgid "List Notifications"
 msgstr ""
 
-#: Missedcall.class.php:1280
+#: Missedcall.class.php:1282
 msgid "Mail Body"
 msgstr ""
 
-#: Missedcall.class.php:1266
+#: Missedcall.class.php:1268
 msgid "Mail Subject"
 msgstr ""
 
-#: Missedcall.class.php:1255
-#: Missedcall.class.php:1256
+#: Missedcall.class.php:1257
+#: Missedcall.class.php:1258
 msgid "Mail Type"
 msgstr ""
 
 #: Missedcall.class.php:323
 #: Missedcall.class.php:341
-#: Missedcall.class.php:656
+#: Missedcall.class.php:658
 #: ucp/Missedcall.class.php:64
 #: ucp/Missedcall.class.php:115
 msgid "Missed Call"
@@ -310,6 +302,22 @@ msgid ""
 "update the email address"
 msgstr ""
 
+#: Missedcall.class.php:1338
+msgid "Notify external missedcall,leave blank to inherit from group"
+msgstr ""
+
+#: Missedcall.class.php:1333
+msgid "Notify internal  missedcall,leave blank to inherit from group"
+msgstr ""
+
+#: Missedcall.class.php:1323
+msgid "Notify queue missedcall,leave blank to inherit from group"
+msgstr ""
+
+#: Missedcall.class.php:1328
+msgid "Notify ringgroup missedcall,leave blank to inherit from group"
+msgstr ""
+
 #: ucp/views/widget.php:5
 msgid "Off"
 msgstr ""
@@ -336,6 +344,10 @@ msgstr ""
 msgid "Queue Calls"
 msgstr ""
 
+#: views/missedcall.php:91
+msgid "Queue call notification"
+msgstr ""
+
 #: ucp/Missedcall.class.php:72
 msgid "Receive an email for any missed call."
 msgstr ""
@@ -352,12 +364,16 @@ msgstr ""
 msgid "Reset"
 msgstr ""
 
-#: views/grid.php:37
+#: views/grid.php:35
 msgid "Ring Group"
 msgstr ""
 
 #: views/form.php:144
 msgid "Ring Group Calls"
+msgstr ""
+
+#: views/missedcall.php:61
+msgid "Ringgroup call notification"
 msgstr ""
 
 #: page.missedcall.php:91
@@ -385,19 +401,19 @@ msgstr ""
 msgid "Table Deleted"
 msgstr ""
 
-#: Missedcall.class.php:1271
+#: Missedcall.class.php:1273
 msgid ""
 "Text to be used for the body of the Missed call notification email. Pre-"
 "defined variables are:"
 msgstr ""
 
-#: Missedcall.class.php:1261
+#: Missedcall.class.php:1263
 msgid ""
 "Text to be used for the subject of the Missed call notification email. Pre-"
 "defined variables are:"
 msgstr ""
 
-#: Missedcall.class.php:1306
+#: Missedcall.class.php:1308
 msgid "The user name of missedcall"
 msgstr ""
 
@@ -452,58 +468,42 @@ msgstr ""
 msgid "Yes"
 msgstr ""
 
-#: Missedcall.class.php:1315
+#: Missedcall.class.php:1317
+msgid "enabled"
+msgstr ""
+
+#: Missedcall.class.php:1312
 msgid "extension"
 msgstr ""
 
-#: Missedcall.class.php:1316
-msgid "extension of missedcall"
+#: Missedcall.class.php:1313
+msgid "extension of user ,user will be identified using this extension"
 msgstr ""
 
-#: Missedcall.class.php:1335
+#: Missedcall.class.php:1337
 msgid "external"
 msgstr ""
 
-#: Missedcall.class.php:1336
-msgid "external of missedcall"
-msgstr ""
-
-#: Missedcall.class.php:1330
+#: Missedcall.class.php:1332
 msgid "internal"
 msgstr ""
 
-#: Missedcall.class.php:1331
-msgid "internal of missedcall"
-msgstr ""
-
-#: Missedcall.class.php:1293
+#: Missedcall.class.php:1295
 msgid "missedcall"
 msgstr ""
 
-#: Missedcall.class.php:1310
-msgid "notification"
+#: Missedcall.class.php:1318
+msgid "notification of missedcall,leave blank to inherit from group"
 msgstr ""
 
-#: Missedcall.class.php:1311
-msgid "notification of missedcall"
-msgstr ""
-
-#: Missedcall.class.php:1320
+#: Missedcall.class.php:1322
 msgid "queue"
 msgstr ""
 
-#: Missedcall.class.php:1321
-msgid "queue of missedcall"
-msgstr ""
-
-#: Missedcall.class.php:1325
+#: Missedcall.class.php:1327
 msgid "ringgroup"
 msgstr ""
 
-#: Missedcall.class.php:1326
-msgid "ringgroup of missedcall"
-msgstr ""
-
-#: Missedcall.class.php:1305
+#: Missedcall.class.php:1307
 msgid "username"
 msgstr ""
