@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-31 10:59+0000\n"
+"POT-Creation-Date: 2023-02-01 11:02+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -303,19 +303,19 @@ msgid ""
 msgstr ""
 
 #: Missedcall.class.php:1338
-msgid "Notify external missedcall,leave blank to inherit from group"
+msgid "Notify external missedcall"
 msgstr ""
 
 #: Missedcall.class.php:1333
-msgid "Notify internal  missedcall,leave blank to inherit from group"
+msgid "Notify internal  missedcall"
 msgstr ""
 
 #: Missedcall.class.php:1323
-msgid "Notify queue missedcall,leave blank to inherit from group"
+msgid "Notify queue missedcall"
 msgstr ""
 
 #: Missedcall.class.php:1328
-msgid "Notify ringgroup missedcall,leave blank to inherit from group"
+msgid "Notify ringgroup missedcall"
 msgstr ""
 
 #: ucp/views/widget.php:5
@@ -493,7 +493,7 @@ msgid "missedcall"
 msgstr ""
 
 #: Missedcall.class.php:1318
-msgid "notification of missedcall,leave blank to inherit from group"
+msgid "notification of missedcall"
 msgstr ""
 
 #: Missedcall.class.php:1322
