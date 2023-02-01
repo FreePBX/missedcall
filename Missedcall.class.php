@@ -1315,27 +1315,27 @@ class Missedcall extends FreePBX_Helpers implements BMO {
 				$headers['enabled'] = array(
 					'required' => false,
 					'identifier' => _("enabled"),
-					'description' => _("notification of missedcall,leave blank to inherit from group")
+					'description' => _("notification of missedcall")
 				);
 				$headers['queue'] = array(
 					'required' => false,
 					'identifier' => _("queue"),
-					'description' => _("Notify queue missedcall,leave blank to inherit from group")
+					'description' => _("Notify queue missedcall")
 				);
 				$headers['ringgroup'] = array(
 					'required' => false,
 					'identifier' => _("ringgroup"),
-					'description' => _("Notify ringgroup missedcall,leave blank to inherit from group")
+					'description' => _("Notify ringgroup missedcall")
 				);
 				$headers['internal'] = array(
 					'required' => false,
 					'identifier' => _("internal"),
-					'description' => _("Notify internal  missedcall,leave blank to inherit from group")
+					'description' => _("Notify internal  missedcall")
 				);
 				$headers['external'] = array(
 					'required' => false,
 					'identifier' => _("external"),
-					'description' => _("Notify external missedcall,leave blank to inherit from group")
+					'description' => _("Notify external missedcall")
 				);
 			break;
 		}
@@ -1357,13 +1357,24 @@ class Missedcall extends FreePBX_Helpers implements BMO {
 		$data = [];
 		foreach($users as $id => $ext){
 			$data[$id]['extension'] = $ext;
-			$data[$id]['enabled'] = $this->userman->getModuleSettingByID($id,'missedcall','mcenabled',$null=true,$cached=true);
-			$data[$id]['ringgroup'] = $this->userman->getModuleSettingByID($id,'missedcall','mcrg',$null=true,$cached=true);
-			$data[$id]['queue'] = $this->userman->getModuleSettingByID($id,'missedcall','mcq',$null=true,$cached=true);
-			$data[$id]['internal'] = $this->userman->getModuleSettingByID($id,'missedcall','mci',$null=true,$cached=true);
-			$data[$id]['external'] = $this->userman->getModuleSettingByID($id,'missedcall','mcx',$null=true,$cached=true);
+			$data[$id]['enabled'] = $this->userManSettingTransilate($this->userman->getModuleSettingByID($id,'missedcall','mcenabled',$null=true,$cached=true));
+			$data[$id]['ringgroup'] = $this->userManSettingTransilate($this->userman->getModuleSettingByID($id,'missedcall','mcrg',$null=true,$cached=true));
+			$data[$id]['queue'] = $this->userManSettingTransilate($this->userman->getModuleSettingByID($id,'missedcall','mcq',$null=true,$cached=true));
+			$data[$id]['internal'] = $this->userManSettingTransilate($this->userman->getModuleSettingByID($id,'missedcall','mci',$null=true,$cached=true));
+			$data[$id]['external'] = $this->userManSettingTransilate($this->userman->getModuleSettingByID($id,'missedcall','mcx',$null=true,$cached=true));
 		}
 		return $data;
+	}
+
+	private function userManSettingTransilate($val=""){
+		$val = trim($val);
+		if($val =="1"){
+			return "yes";
+		}elseif($val == "0") {
+			return "no";
+		} else {
+			return "inherit";
+		}
 	}
 
 	public function bulkhandlerImport($type, $rawData) {
@@ -1391,18 +1402,29 @@ class Missedcall extends FreePBX_Helpers implements BMO {
 		//getuserid by exten
 		$user = $this->userman->getUserByDefaultExtension($data['extension']);
 		$userid = $user['id'];
-		$notification = isset($data['enabled'])? $data['enabled'] :'null';
+		$notification = $this->userManSettingTransilateback($data['enabled']);
 		$this->updateUsermanAndMissedcall($userid,'notification',$notification);
-		$queue = isset($data['queue'])? $data['queue'] :'null';
+		$queue = $this->userManSettingTransilateback($data['queue']);
 		$this->updateUsermanAndMissedcall($userid,'queue',$queue);
-		$ringgroup = isset($data['ringgroup'])? $data['ringgroup'] :'null';
+		$ringgroup = $this->userManSettingTransilateback($data['ringgroup']);
 		$this->updateUsermanAndMissedcall($userid,'ringgroup',$ringgroup);
-		$internal = isset($data['internal'])? $data['internal'] :'null';
+		$internal = $this->userManSettingTransilateback($data['internal']);
 		$this->updateUsermanAndMissedcall($userid,'internal',$internal);
-		$external = isset($data['external'])? $data['external'] :'null';
+		$external = $this->userManSettingTransilateback($data['external']);
 		$this->updateUsermanAndMissedcall($userid,'external',$external);
 		return true;
 	}
+	private function userManSettingTransilateback($val){
+		$val = trim($val);
+		if(strtolower($val) === "yes"){
+			return "1";
+		}elseif(strtolower($val) === "no") {
+			return "0";
+		} else {
+			return "";
+		}
+	}
+
 
 	public function updateUsermanAndMissedcall($id,$setting,$value='null'){
 		if($setting =='notification' ) {
@@ -1432,7 +1454,7 @@ class Missedcall extends FreePBX_Helpers implements BMO {
 				$this->userman->setModuleSettingByID($id,'missedcall','mcrg',false);
 				$this->updateOne($id,'ringgroup',0);
 			} else {
-				$this->userman->setModuleSettingByID($id,'missedcall','mcrg',"");
+				$this->userman->setModuleSettingByID($id,'missedcall','mcrg',null);
 				//getcombined settings
 				$mcrg =	$this->userman->getCombinedModuleSettingByID($id,'missedcall','mcrg');
 				if($mcrg){
