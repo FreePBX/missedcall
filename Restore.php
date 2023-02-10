@@ -5,8 +5,7 @@ use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
 class Restore Extends Base\RestoreBase{
 
 	public function runRestore(){
-		$config 	= $this->getConfigs();
-		$db 		= $this->FreePBX->Database;
+		$configs 	= $this->getConfigs();
 
 		/**
          * Restoring missedcall data 
@@ -15,8 +14,8 @@ class Restore Extends Base\RestoreBase{
 		$sql		= "TRUNCATE TABLE missedcall;";
 		$db->prepare($sql)->execute();
 
-		if(!empty($config["data"])){
-			foreach($config["data"] as $data){
+		if(!empty($configs["data"])){
+			foreach($configs["data"] as $data){
 				if(!empty($data) && is_array($data)){
 					$this->FreePBX->Missedcall->addMissedcallRow($data);
 				}
