@@ -1,7 +1,7 @@
 <module>
 	<rawname>missedcall</rawname>
 	<name>Missed Call Notification</name>
-	<version>16.0.0</version>
+	<version>16.0.1</version>
 	<publisher>Sangoma Technologies Corporation</publisher>
 	<license>GPLv3+</license>
 	<licenselink>https://www.gnu.org/licenses/gpl-3.0.txt</licenselink>
@@ -11,7 +11,8 @@
 		<missedcall>Missed Call Notification</missedcall>
 	</menuitems>
 	<changelog>
-		*16.0.0* Initial release for 16.0 
+		*16.0.1* FREEPBX-24005 
+		*16.0.0* Initial release for 16.0
 	</changelog>
 	<description>Send email notifications to users when a call is missed</description>
 	<category>Applications</category>
@@ -52,8 +53,8 @@
 	</hooks>
 	<database name="asterisk">
 		<table name="missedcall">
-			<field name="userid" type="integer" primarykey="true" />
-			<field name="notification" type="smallint" default="0" notnull="false" />
+			<field name="userid" type="integer" primarykey="true"/>
+			<field name="notification" type="smallint" default="0" notnull="false"/>
 			<field name="extension" type="string" length="50"/>
 			<field name="queue" type="smallint" notnull="false"/>
 			<field name="ringgroup" type="smallint" notnull="false"/>
@@ -64,16 +65,16 @@
 			</key>
 		</table>
 		<table name="missedcalllog">
-			<field name="id" type="integer" primarykey="true" autoincrement="true" />
+			<field name="id" type="integer" primarykey="true" autoincrement="true"/>
 			<field name="callerid" type="string" length="50" notnull="false"/>
 			<field name="calleridname" type="string" length="100" notnull="false"/>
-			<field name="destination" type="string"  length="50"  notnull="false"/>
-			<field name="Call_type" type="string"  length="50" notnull="false"/>
-			<field name="uniqueid" type="string"  length="100" notnull="false"/>
-			<field name="linkedid" type="string"  length="100" notnull="false"/>
-			<field name="dialstatus" type="string"  length="50" notnull="false"/>
-			<field name="channel" type="string"  length="200" notnull="false"/>
-			<field name="chan_orgin_from" type="string"  length="100" notnull="false"/>
+			<field name="destination" type="string" length="50" notnull="false"/>
+			<field name="Call_type" type="string" length="50" notnull="false"/>
+			<field name="uniqueid" type="string" length="100" notnull="false"/>
+			<field name="linkedid" type="string" length="100" notnull="false"/>
+			<field name="dialstatus" type="string" length="50" notnull="false"/>
+			<field name="channel" type="string" length="200" notnull="false"/>
+			<field name="chan_orgin_from" type="string" length="100" notnull="false"/>
 		</table>
 		<table name="missedcall_email_templates">
 			<field name="name" type="string" length="20" primarykey="true"/>
