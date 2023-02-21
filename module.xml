@@ -60,9 +60,6 @@
 			<field name="ringgroup" type="smallint" notnull="false"/>
 			<field name="internal" type="smallint" notnull="false"/>
 			<field name="external" type="smallint" notnull="false"/>
-			<key name="extension" type="unique">
-				<column name="extension"/>
-			</key>
 		</table>
 		<table name="missedcalllog">
 			<field name="id" type="integer" primarykey="true" autoincrement="true"/>
