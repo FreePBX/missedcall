@@ -585,6 +585,12 @@ class Missedcall extends FreePBX_Helpers implements BMO {
 
 	public function ucpUpdateGroup($id,$display,$data) {
 		if($display == 'userman' && isset($_POST['type']) && $_POST['type'] == 'group') {
+			if($_POST['missedcall_enable'] == 'yes') {
+				$this->FreePBX->Ucp->setSettingByGID($id,'Missedcall','enabled',true);
+			} else {
+				$this->FreePBX->Ucp->setSettingByGID($id,'Missedcall','enabled',false);
+			}
+
 			if($_POST['mcenabled'] == 'yes') {
 				$this->FreePBX->Ucp->setSettingByGID($id,'Missedcall','mcenabled',true);
 			} else {
