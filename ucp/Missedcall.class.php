@@ -53,9 +53,15 @@ class Missedcall extends Modules {
 		$user 		= $this->user;
 		$ext 		= !empty($user["default_extension"]) ? $user["default_extension"] : Null;
 		$mc_params 	= $this->mc->get($user['id']);
+
+		if(!$this->enabled){
+			dbug(sprintf( _("Missedcall -- User account '%s' Not allowed to use this UCP widget."), $user["username"]));
+			return false;
+		}
+
 		if(empty($mc_params["email"])){
 			// The code below is useful. 
-			dbug(sprintf( _("Missedcall -- User account '%s' doesn't have a valid email address!"), $user));
+			dbug(sprintf( _("Missedcall -- User account '%s' doesn't have a valid email address!"), $user["username"]));
 			return false;
 		}		
 
@@ -72,7 +78,8 @@ class Missedcall extends Modules {
 			"description" => _("Receive an email for any missed call."), //Widget description
 			"hasSettings" => false, //Set to true if this widget has settings. This will make the cog (gear) icon display on the widget display
 			"icon" => "fa fa-envelope-square", //If set the widget in on the side bar will use this icon instead of the category icon,
-			"dynamic" => false //If set to true then this widget can be added multiple times, if false then this widget can only be added once per dashboard!
+			"dynamic" => false,//If set to true then this widget can be added multiple times, if false then this widget can only be added once per dashboard!
+			"defaultsize" => array("height" => 9, "width" => 2)
 		);
 		return $widget;
 	}

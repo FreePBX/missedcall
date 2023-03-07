@@ -25,7 +25,7 @@
 	</div>
 	<div class="row">
 		<div class="col-md-12">
-			<span id="missedcall_enable-help" class="help-block fpbx-help-block"><?php echo _("Allow this user to receive an email for any missed call.")?></span>
+			<span id="missedcall_enable-help" class="help-block fpbx-help-block"><?php echo _("Allow user to configure Missed Call Notifications in UCP")?></span>
 		</div>
 	</div>
 </div>
