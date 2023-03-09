@@ -20,7 +20,7 @@
 	 **********************************************************************/
 
 	// set to true for verbose agi output
-	$mc_debug 	= true;
+	$mc_debug 	= false;
 
 	// get script arguments
 	$extension = $argv['1'];
