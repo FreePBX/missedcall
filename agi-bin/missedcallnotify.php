@@ -148,7 +148,12 @@
 	$mcexten = get_var($agi,"MCEXTEN");
 	$mcname = get_var($agi,"MCNAME");
 	$mcnum = get_var($agi,"MCNUM");
-
+	$mcvmstatus = get_var($agi,"MCVMSTATUS");
+	if($mcvmstatus == "SUCCESS"){
+		log_write("The VM for $extension responded. VMSTATUS: $mcvmstatus. No notification sent.");
+		exit;
+	}
+	
 	// in case MC* channel variables are not set, attempt to get calling extension from channel CID values
 	// or FROMEXTEN variable this will only work in simple cases
 	if (!$mcexten) {
@@ -230,6 +235,7 @@
 	log_write("Ringing extension: ".$extension);
 	$uid = md5($linkedid.$mcexten.$mcname);
 	log_write("Missed Call UID: ".$uid);
+	log_write("Voicemail Status: ".$mcvmstatus);
 	log_write("Notification enabled?: ".$mc_params['enable']);
 	log_write("Is Internal call?: ".($internal ? 'Yes' : 'No'));
 	log_write("Send Internal Notification?: ".($mc_params['internal'] ? 'Yes' : 'No'));

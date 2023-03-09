@@ -739,7 +739,7 @@ class Missedcall extends FreePBX_Helpers implements BMO {
 		$ext->add($id, $c, '', new \ext_noop('Caller: ${MCEXTEN}'));
 		$ext->add($id, $c, '',new \ext_agi('missedcallnotify.php,${MCEXTTOCALL},,${EXTEN},${DB_EXISTS(AMPUSER/${EXTEN}/missedcall)},${DB(AMPUSER/${EXTEN}/missedcall)},${CHANNEL},${DIALSTATUS},${MCQUEUE}'));
 		$ext->add($id, $c, 'exit', new \ext_return());
-
+		
 		// need to set an inheritable channel variable so the dialing extension is known at hangup
 		$context = "macro-user-callerid";
 		$ext->splice($context, 's', "continue", new \ext_set('__MCORGCHAN','${CHANNEL}'),"",3,true);
@@ -760,10 +760,12 @@ class Missedcall extends FreePBX_Helpers implements BMO {
 		foreach($priorities as $pri) {
 			$ext->splice($context, "s", $pri, new \ext_set('__MCEXTTOCALL','${EXTTOCALL}'),"",1);
 		}
-		//
+
 		$context = 'macro-hangupcall';
 		$exten = 's';
-		$ext->splice($context,$exten,'start', new \ext_gosub(1, '${EXTEN}', 'app-missedcall-hangup'));
+		$ext->splice($context, $exten, "start", new \ext_set('__MCVMSTATUS','${VMSTATUS}'));
+		$ext->splice($context, $exten, 'start', new \ext_gosub(1, '${EXTEN}', 'app-missedcall-hangup'));
+
 
 		// splice inheritable channel variable into each ring group
 		$context = 'ext-group';
