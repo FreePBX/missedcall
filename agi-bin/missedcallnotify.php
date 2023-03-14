@@ -26,11 +26,14 @@
 	$extension = $argv['1'];
 	$enabled = isset($argv['2'])?$argv['2']:'';
 	$dialplanext = isset($argv['3'])?$argv['3']:'';// if it 's' then it could be the master channel hanging up
+	$extension = is_numeric($dialplanext)?$dialplanext:$extension;
 	$dialplanextdbexit =  isset($argv['4'])?$argv['4']:'';
 	$dialplanextdbvalue =  isset($argv['5'])?$argv['5']:'';
 	$curchannel =  isset($argv['6'])?$argv['6']:'';
 	$channeldialstatus =  isset($argv['7'])?$argv['7']:'';
 	$queuecall =  isset($argv['8'])?$argv['8']:'';
+	$rrgroup = isset($argv['9'])?$argv['9']:'';
+	$fmfm = isset($argv['10'])?$argv['10']:'';
 	// Load FreePBX bootstrap environment
 	$restrict_mods = array('missedcall' => true);
 	if (!@include_once(getenv('FREEPBX_CONF') ? getenv('FREEPBX_CONF') : '/etc/freepbx.conf')) {
@@ -55,8 +58,11 @@
 		log_write($key.": ".$value);
 	}
 	*/
-
-	if (!$extension &&  $queuecall == "" ) {
+	if($fmfm == 'TRUE'){
+		log_write("This call is  from FMFM , skip it ");
+		exit;
+	}
+	if (!$extension && ( $queuecall == "" && $rrgroup== "") ) {
 		log_write("As a minimum this script requires extension or 's' as argument");
 		exit;
 	}
@@ -127,10 +133,10 @@
 	}
 
 	// get missed call params for ringing extension, array of enable, queue, ringgroup, internal, external, email
-	$mc_params = $mc->get($extension,'byEXT');
+	$mc_params = $mc->get($dialplanext,'byEXT');
 	$mcgroup = get_var($agi,"MCGROUP");
 	// if notifications are disabled for ringing extension, can exit immediately
-	if (($extension !="" && $mc_params['notification'] == 0)  && ( $queuecall == "" || $mcgroup == "")) {
+	if ((($extension !="" && $dialplanext !='s') && $mc_params['notification'] == 0)  ) {
 		log_write("Notifications disabled for $extension, exiting");
 		exit;
 	}

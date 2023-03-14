@@ -735,9 +735,10 @@ class Missedcall extends FreePBX_Helpers implements BMO {
 
 		$id = 'app-missedcall-hangup';
 		$c = '_.';
-		$ext->add($id, $c, '', new \ext_noop('Callee: ${EXTEN}'));
+		$ext->add($id, $c, '', new \ext_noop('Dialed: ${EXTEN}'));
 		$ext->add($id, $c, '', new \ext_noop('Caller: ${MCEXTEN}'));
-		$ext->add($id, $c, '',new \ext_agi('missedcallnotify.php,${MCEXTTOCALL},,${EXTEN},${DB_EXISTS(AMPUSER/${EXTEN}/missedcall)},${DB(AMPUSER/${EXTEN}/missedcall)},${CHANNEL},${DIALSTATUS},${MCQUEUE}'));
+		$ext->add($id, $c,'', new \ext_gotoif('$[${DB_EXISTS(AMPUSER/${EXTEN}/missedcall)} & "${DB(AMPUSER/${EXTEN}/missedcall)}"="disable"]','exit'));
+		$ext->add($id, $c, '',new \ext_agi('missedcallnotify.php,${MCEXTTOCALL},,${EXTEN},${DB_EXISTS(AMPUSER/${EXTEN}/missedcall)},${DB(AMPUSER/${EXTEN}/missedcall)},${CHANNEL},${DIALSTATUS},${MCQUEUE},${MCGROUP},${FMFM}'));
 		$ext->add($id, $c, 'exit', new \ext_return());
 		
 		// need to set an inheritable channel variable so the dialing extension is known at hangup
@@ -749,7 +750,9 @@ class Missedcall extends FreePBX_Helpers implements BMO {
 
 		// splice hangup handler into dialplan, 'func-apply-sipheaders' gets run on every dial
 		$context = 'func-apply-sipheaders';
-		$ext->splice($context, "s", "", new \ext_set('CHANNEL(hangup_handler_push)','app-missedcall-hangup,${MCEXTTOCALL},1'),"",1);
+		$ext->splice($context, "s", 1, new \ext_set('localchan','${CUT(CHANNEL,/,2)}'));
+		$ext->splice($context, "s", 2, new \ext_set('DialMCEXT','${CUT(localchan,-,1)}'));
+		$ext->splice($context, "s", 3, new \ext_set('CHANNEL(hangup_handler_push)','app-missedcall-hangup,${DialMCEXT},1'),"",1);
 
 		$context = 'macro-dial-one';
 		$ext->splice($context, "s", "", new \ext_set('__MCMULTI','${MD5(${DEXTEN}${FROMEXTEN})}'),"",1);
@@ -766,7 +769,9 @@ class Missedcall extends FreePBX_Helpers implements BMO {
 		$ext->splice($context, $exten, "start", new \ext_set('__MCVMSTATUS','${VMSTATUS}'));
 		$ext->splice($context, $exten, 'start', new \ext_gosub(1, '${EXTEN}', 'app-missedcall-hangup'));
 
-
+		// splcie into FMFM
+		$context = 'followme-sub';
+		$ext->splice($context, '_X!', 0, new \ext_set('__FMFM','TRUE'));
 		// splice inheritable channel variable into each ring group
 		$context = 'ext-group';
 		$rgroups = $this->getRingGroups();
