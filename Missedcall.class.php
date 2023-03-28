@@ -62,7 +62,10 @@ class Missedcall extends FreePBX_Helpers implements BMO {
 		$users = $this->getUsers();
 		foreach($users as $id=>$ext){
 			if(!empty($ext)){
-				$response = $this->FreePBX->astman->database_put("AMPUSER","$ext/missedcall", "disable");
+				$response = $this->FreePBX->astman->database_get("AMPUSER","$ext/missedcall");
+				if($response != "enable") {
+					$response = $this->FreePBX->astman->database_put("AMPUSER","$ext/missedcall", "disable");
+				}
 				$this->update($id,$ext,0, 0, 0, 0);
 			}			
 		}
@@ -737,10 +740,12 @@ class Missedcall extends FreePBX_Helpers implements BMO {
 		$c = '_.';
 		$ext->add($id, $c, '', new \ext_noop('Dialed: ${EXTEN}'));
 		$ext->add($id, $c, '', new \ext_noop('Caller: ${MCEXTEN}'));
-		$ext->add($id, $c,'', new \ext_gotoif('$[${DB_EXISTS(AMPUSER/${EXTEN}/missedcall)} & "${DB(AMPUSER/${EXTEN}/missedcall)}"="disable"]','exit'));
-		$ext->add($id, $c, '',new \ext_agi('missedcallnotify.php,${MCEXTTOCALL},,${EXTEN},${DB_EXISTS(AMPUSER/${EXTEN}/missedcall)},${DB(AMPUSER/${EXTEN}/missedcall)},${CHANNEL},${DIALSTATUS},${MCQUEUE},${MCGROUP},${FMFM}'));
+		$ext->add($id, $c, '', new \ext_set('EXTENNUM','${CUT(EXTEN,@,1)}'));
+		$ext->add($id, $c, '', new \ext_set('FEXTENNUM', '${IF($["${EXTENNUM:0:2}"="90"]?${EXTENNUM:2}:${EXTEN})}'));
+		$ext->add($id, $c, '', new \ext_gotoif('$[${DB_EXISTS(AMPUSER/${FEXTENNUM}/missedcall)} & "${DB(AMPUSER/${FEXTENNUM}/missedcall)}"="disable"]','exit'));
+		$ext->add($id, $c, '', new \ext_agi('missedcallnotify.php,${FEXTENNUM},,${FEXTENNUM},${DB_EXISTS(AMPUSER/${FEXTENNUM}/missedcall)},${DB(AMPUSER/${FEXTENNUM}/missedcall)},${CHANNEL},${DIALSTATUS},${MCQUEUE},${MCGROUP},${FMFM}'));
 		$ext->add($id, $c, 'exit', new \ext_return());
-		
+
 		// need to set an inheritable channel variable so the dialing extension is known at hangup
 		$context = "macro-user-callerid";
 		$ext->splice($context, 's', "continue", new \ext_set('__MCORGCHAN','${CHANNEL}'),"",3,true);
