@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-03-15 09:11+0000\n"
+"POT-Creation-Date: 2023-03-28 06:23+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -81,7 +81,7 @@ msgstr ""
 msgid "Calls from Ring Groups"
 msgstr ""
 
-#: Missedcall.class.php:180
+#: Missedcall.class.php:183
 msgid "Delete"
 msgstr ""
 
@@ -104,19 +104,19 @@ msgstr ""
 msgid "Email Settings"
 msgstr ""
 
-#: Missedcall.class.php:1243
+#: Missedcall.class.php:1248
 msgid "Email body is required"
 msgstr ""
 
-#: Missedcall.class.php:1255
+#: Missedcall.class.php:1260
 msgid "Email settings saved successfully"
 msgstr ""
 
-#: Missedcall.class.php:1239
+#: Missedcall.class.php:1244
 msgid "Email subject is required"
 msgstr ""
 
-#: Missedcall.class.php:1233
+#: Missedcall.class.php:1238
 msgid "Email type is required"
 msgstr ""
 
@@ -192,7 +192,7 @@ msgstr ""
 msgid "For more information see: "
 msgstr ""
 
-#: Missedcall.class.php:1309
+#: Missedcall.class.php:1314
 msgid "Import/Export missedcall"
 msgstr ""
 
@@ -232,28 +232,28 @@ msgstr ""
 msgid "List Notifications"
 msgstr ""
 
-#: Missedcall.class.php:1295
+#: Missedcall.class.php:1300
 msgid "Mail Body"
 msgstr ""
 
-#: Missedcall.class.php:1281
+#: Missedcall.class.php:1286
 msgid "Mail Subject"
 msgstr ""
 
-#: Missedcall.class.php:1270
-#: Missedcall.class.php:1271
+#: Missedcall.class.php:1275
+#: Missedcall.class.php:1276
 msgid "Mail Type"
 msgstr ""
 
-#: Missedcall.class.php:323
-#: Missedcall.class.php:341
-#: Missedcall.class.php:664
+#: Missedcall.class.php:326
+#: Missedcall.class.php:344
+#: Missedcall.class.php:667
 #: ucp/Missedcall.class.php:70
 #: ucp/Missedcall.class.php:122
 msgid "Missed Call"
 msgstr ""
 
-#: Missedcall.class.php:124
+#: Missedcall.class.php:127
 #: page.missedcall.php:18
 #: views/default.php:2
 msgid "Missed Call Notification"
@@ -307,19 +307,19 @@ msgid ""
 "update the email address"
 msgstr ""
 
-#: Missedcall.class.php:1351
+#: Missedcall.class.php:1356
 msgid "Notify external missedcall"
 msgstr ""
 
-#: Missedcall.class.php:1346
+#: Missedcall.class.php:1351
 msgid "Notify internal  missedcall"
 msgstr ""
 
-#: Missedcall.class.php:1336
+#: Missedcall.class.php:1341
 msgid "Notify queue missedcall"
 msgstr ""
 
-#: Missedcall.class.php:1341
+#: Missedcall.class.php:1346
 msgid "Notify ringgroup missedcall"
 msgstr ""
 
@@ -357,15 +357,15 @@ msgstr ""
 msgid "Receive an email for any missed call."
 msgstr ""
 
-#: Missedcall.class.php:82
+#: Missedcall.class.php:85
 msgid "Removing missedcall keys from the asterisk database"
 msgstr ""
 
-#: Missedcall.class.php:73
+#: Missedcall.class.php:76
 msgid "Removing the database table"
 msgstr ""
 
-#: Missedcall.class.php:185
+#: Missedcall.class.php:188
 msgid "Reset"
 msgstr ""
 
@@ -389,40 +389,40 @@ msgstr ""
 msgid "Saved"
 msgstr ""
 
-#: Missedcall.class.php:78
+#: Missedcall.class.php:81
 msgid "Something went wrong"
 msgstr ""
 
-#: Missedcall.class.php:190
+#: Missedcall.class.php:193
 msgid "Submit"
 msgstr ""
 
-#: Missedcall.class.php:245
-#: Missedcall.class.php:250
+#: Missedcall.class.php:248
+#: Missedcall.class.php:253
 msgid "Success."
 msgstr ""
 
-#: Missedcall.class.php:76
+#: Missedcall.class.php:79
 msgid "Table Deleted"
 msgstr ""
 
-#: Missedcall.class.php:1286
+#: Missedcall.class.php:1291
 msgid ""
 "Text to be used for the body of the Missed call notification email. Pre-"
 "defined variables are:"
 msgstr ""
 
-#: Missedcall.class.php:1276
+#: Missedcall.class.php:1281
 msgid ""
 "Text to be used for the subject of the Missed call notification email. Pre-"
 "defined variables are:"
 msgstr ""
 
-#: Missedcall.class.php:1321
+#: Missedcall.class.php:1326
 msgid "The user name of missedcall"
 msgstr ""
 
-#: Missedcall.class.php:214
+#: Missedcall.class.php:217
 msgid ""
 "The user's email address is required. Because missed call notification is "
 "enabled. Please disable it and try again."
@@ -442,7 +442,7 @@ msgstr ""
 msgid "Time must be between 1 and 60 seconds"
 msgstr ""
 
-#: Missedcall.class.php:252
+#: Missedcall.class.php:255
 msgid "Unknown Status."
 msgstr ""
 
@@ -473,42 +473,42 @@ msgstr ""
 msgid "Yes"
 msgstr ""
 
-#: Missedcall.class.php:1330
+#: Missedcall.class.php:1335
 msgid "enabled"
 msgstr ""
 
-#: Missedcall.class.php:1325
+#: Missedcall.class.php:1330
 msgid "extension"
 msgstr ""
 
-#: Missedcall.class.php:1326
+#: Missedcall.class.php:1331
 msgid "extension of user ,user will be identified using this extension"
 msgstr ""
 
-#: Missedcall.class.php:1350
+#: Missedcall.class.php:1355
 msgid "external"
 msgstr ""
 
-#: Missedcall.class.php:1345
+#: Missedcall.class.php:1350
 msgid "internal"
 msgstr ""
 
-#: Missedcall.class.php:1308
+#: Missedcall.class.php:1313
 msgid "missedcall"
 msgstr ""
 
-#: Missedcall.class.php:1331
+#: Missedcall.class.php:1336
 msgid "notification of missedcall"
 msgstr ""
 
-#: Missedcall.class.php:1335
+#: Missedcall.class.php:1340
 msgid "queue"
 msgstr ""
 
-#: Missedcall.class.php:1340
+#: Missedcall.class.php:1345
 msgid "ringgroup"
 msgstr ""
 
-#: Missedcall.class.php:1320
+#: Missedcall.class.php:1325
 msgid "username"
 msgstr ""
