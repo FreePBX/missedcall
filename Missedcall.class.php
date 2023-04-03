@@ -740,8 +740,9 @@ class Missedcall extends FreePBX_Helpers implements BMO {
 		$c = '_.';
 		$ext->add($id, $c, '', new \ext_noop('Dialed: ${EXTEN}'));
 		$ext->add($id, $c, '', new \ext_noop('Caller: ${MCEXTEN}'));
+		$ext->add($id, $c, '', new \ext_gotoif('$["${CHANNEL(LINKEDID)}"!="${CHANNEL(UNIQUEID)}" & "${EXTEN}"="s"]','exit'));
 		$ext->add($id, $c, '', new \ext_set('EXTENNUM','${CUT(EXTEN,@,1)}'));
-		$ext->add($id, $c, '', new \ext_set('FEXTENNUM', '${IF($["${EXTENNUM:0:2}"="90"]?${EXTENNUM:2}:${EXTEN})}'));
+		$ext->add($id, $c, '', new \ext_set('FEXTENNUM', '${IF($[["${EXTENNUM:0:2}"="90"] || ["${EXTENNUM:0:2}"="98"]]?${EXTENNUM:2}:${EXTEN})}'));
 		$ext->add($id, $c, '', new \ext_gotoif('$[${DB_EXISTS(AMPUSER/${FEXTENNUM}/missedcall)} & "${DB(AMPUSER/${FEXTENNUM}/missedcall)}"="disable"]','exit'));
 		$ext->add($id, $c, '', new \ext_agi('missedcallnotify.php,${FEXTENNUM},,${FEXTENNUM},${DB_EXISTS(AMPUSER/${FEXTENNUM}/missedcall)},${DB(AMPUSER/${FEXTENNUM}/missedcall)},${CHANNEL},${DIALSTATUS},${MCQUEUE},${MCGROUP},${FMFM}'));
 		$ext->add($id, $c, 'exit', new \ext_return());
