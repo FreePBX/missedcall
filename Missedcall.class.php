@@ -129,11 +129,19 @@ class Missedcall extends FreePBX_Helpers implements BMO {
 		$fr_email = 'email@domain.com';
 		$fr_name = $this->FreePBX->Config()->get('DASHBOARD_FREEPBX_BRAND');;
 	}
+		$user = $this->userman->getUserByDefaultExtension($ext);
+		$timezone = $this->userman->getLocaleSpecificSettingByUID($user['id'],'timezone');
+		$date = date("Y-m-d H:i:s");
+		if(!empty($timezone)) {
+			$date = new \DateTime("now",new \DateTimeZone($timezone));
+			$date = $date->format('Y-m-d H:i:s');
+		}
+
 		$emailData['brand'] = $this->FreePBX->Config()->get('BRAND_FREEPBX_ALT_LEFT');
 		$emailData['extension'] = $ext;
 		$emailData['callerid'] = $mcexten;
 		$emailData['calleridname'] = $mcname;
-		$emailData['datetime'] = date("Y-m-d H:i:s");
+		$emailData['datetime'] = $date;
 		$emailData['calltype'] = $calltype;
 
 		// Get mail template
