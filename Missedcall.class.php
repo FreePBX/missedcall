@@ -121,14 +121,20 @@ class Missedcall extends FreePBX_Helpers implements BMO {
 		return;
 	}
 	
-	public function sendEmail($mc_email,$ext,$mcexten,$mcname="",$calltype){
-	// determine from email address for notification
-	$fr_email = $this->FreePBX->Config()->get('AMPUSERMANEMAILFROM');
-	$fr_name = _("Missed Call Notification");
-	if (!$fr_email) {
-		$fr_email = 'email@domain.com';
-		$fr_name = $this->FreePBX->Config()->get('DASHBOARD_FREEPBX_BRAND');;
-	}
+	public function sendEmail($mc_email,$ext,$mcexten,$mcname="",$calltype) {
+		// determine from email address for notification
+		if (function_exists('fetchFromEmail')) {
+			$fr_email = fetchFromEmail();
+		} else {
+			$from = $this->FreePBX->Config()->get('AMPUSERMANEMAILFROM');
+			$fr_email = !empty($from) ? $from : 'freepbx@freepbx.org';
+		}
+		$bname = $this->FreePBX->Config()->get('DASHBOARD_FREEPBX_BRAND');
+		if (!empty($bname)) {
+			$fr_name = $bname." : "._("Missed Call Notification");
+		} else {
+			$fr_name = _("Missed Call Notification");
+		}
 		$user = $this->userman->getUserByDefaultExtension($ext);
 		$timezone = $this->userman->getLocaleSpecificSettingByUID($user['id'],'timezone');
 		$date = date("Y-m-d H:i:s");
@@ -147,7 +153,7 @@ class Missedcall extends FreePBX_Helpers implements BMO {
 		// Get mail template
 		$emailTemplate = $this->getMailTemplate('notification_mail');
 		$emailType = !empty($emailTemplate['type']) ? $emailTemplate['type'] : self::EMAIL_TYPE_HTML;
-		
+
 		$subject = !empty($emailTemplate['subject']) ? $emailTemplate['subject'] : self::EMAIL_SUBJECT;
 		$subject = $this->replaceTemplateVariables($subject, $emailData);
 
