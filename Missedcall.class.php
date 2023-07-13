@@ -131,7 +131,7 @@ class Missedcall extends FreePBX_Helpers implements BMO {
 		}
 		$bname = $this->FreePBX->Config()->get('DASHBOARD_FREEPBX_BRAND');
 		if (!empty($bname)) {
-			$fr_name = $bname." : "._("Missed Call Notification");
+			$fr_name = $bname.": "._("Missed Call Notification");
 		} else {
 			$fr_name = _("Missed Call Notification");
 		}
