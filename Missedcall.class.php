@@ -10,11 +10,11 @@ use Exception;
 
 class Missedcall extends FreePBX_Helpers implements BMO {
 	
-    const EMAIL_TYPE_HTML = 'html';
-    const EMAIL_TYPE_TEXT = 'text';
-    const EMAIL_SUBJECT = 'Missed call from {{calleridname}}';
+    final public const EMAIL_TYPE_HTML = 'html';
+    final public const EMAIL_TYPE_TEXT = 'text';
+    final public const EMAIL_SUBJECT = 'Missed call from {{calleridname}}';
 
-	private $licensed = false;
+	private bool $licensed = false;
 
 	public function __construct($freepbx = null) {
 		if ($freepbx == null) {
@@ -31,7 +31,7 @@ class Missedcall extends FreePBX_Helpers implements BMO {
 		if(!isset($request['view']) || $request['view'] != "form") {
 			return false;
 		}
-		return load_view(__DIR__."/views/rnav.php",array());
+		return load_view(__DIR__."/views/rnav.php",[]);
 	}
 
 	//BMO Methods
@@ -73,6 +73,7 @@ class Missedcall extends FreePBX_Helpers implements BMO {
 
 	// required function - called during module un-install
 	public function uninstall() {
+		$queries = [];
 		out(_('Removing the database table'));
     	$result = $this->deleteTable();
     	if($result === true){
@@ -102,7 +103,7 @@ class Missedcall extends FreePBX_Helpers implements BMO {
 		$stmt = $this->db->prepare($query);
 		$stmt->execute();
 		$data = $stmt->fetch(\PDO::FETCH_ASSOC);
-		return isset($data['user'])?$data['user']:$ext;
+		return $data['user'] ?? $ext;
 	}
 
 	// fetchall call belong to given linkedid
@@ -121,8 +122,9 @@ class Missedcall extends FreePBX_Helpers implements BMO {
 		return;
 	}
 	
-	public function sendEmail($mc_email,$ext,$mcexten,$mcname="",$calltype) {
-		// determine from email address for notification
+	public function sendEmail($mc_email='',$ext='',$mcexten='',$mcname="",$calltype='') {
+		$emailData = [];
+  		// determine from email address for notification
 		if (function_exists('fetchFromEmail')) {
 			$fr_email = fetchFromEmail();
 		} else {
@@ -159,7 +161,7 @@ class Missedcall extends FreePBX_Helpers implements BMO {
 
 		$body = !empty($emailTemplate['body']) ? $emailTemplate['body'] : file_get_contents(__DIR__ . '/views/mail.tpl');
 		$body = $this->replaceTemplateVariables($body, $emailData);
-		$body = $emailType == self::EMAIL_TYPE_HTML ? html_entity_decode($body, ENT_QUOTES) : $body;
+		$body = $emailType == self::EMAIL_TYPE_HTML ? html_entity_decode((string) $body, ENT_QUOTES) : $body;
 
 		$em = new \CI_Email();
 		$em->from($fr_email, $fr_name);
@@ -181,32 +183,16 @@ class Missedcall extends FreePBX_Helpers implements BMO {
 			$error = true;
 		}
 		$content = load_view(__DIR__.'/views/grid.php');
-		echo load_view(__DIR__.'/views/default.php', array('subhead' => $subhead, 'content' => $content, "error" => $error));
+		echo load_view(__DIR__.'/views/default.php', ['subhead' => $subhead, 'content' => $content, "error" => $error]);
 	}
 
     //add buttons to your page(s), buttons should not be added in html. Note this is a 13+ method.
 	public function getActionBar($request) {
-		$buttons = array();
+		$buttons = [];
 		switch($request['display']) {
 			//this is usually your module's rawname
 			case 'missedcall':
-				$buttons = array(
-					'delete' => array(
-						'name' => 'delete',
-						'id' => 'delete',
-						'value' => _('Delete')
-					),
-					'reset' => array(
-						'name' => 'reset',
-						'id' => 'reset',
-						'value' => _('Reset')
-					),
-					'submit' => array(
-						'name' => 'submit',
-						'id' => 'submit',
-						'value' => _('Submit')
-					)
-				);
+				$buttons = ['delete' => ['name' => 'delete', 'id' => 'delete', 'value' => _('Delete')], 'reset' => ['name' => 'reset', 'id' => 'reset', 'value' => _('Reset')], 'submit' => ['name' => 'submit', 'id' => 'submit', 'value' => _('Submit')]];
 				//We hide the delete button if we are not editing an item. "id" should be whatever your unique element is.
 				if (empty($request['id'])) {
 					unset($buttons['delete']);
@@ -231,24 +217,17 @@ class Missedcall extends FreePBX_Helpers implements BMO {
 			$message = _("The user's email address is required. Because missed call notification is enabled. Please disable it and try again.");
 		}
 
-		return array("status" => $noError, "type" => $noError ? "" : "danger",  "message" => $message);
+		return ["status" => $noError, "type" => $noError ? "" : "danger", "message" => $message];
 	}
 
 	//Ajax methods
 
 	//This method declares which are valid ajax commands...
 	public function ajaxRequest($req, &$setting) {
-		switch ($req) {
-			case "toggleMC":
-			case "get_status":
-			case "savebulk":
-			case "saveEmailSettings":
-				return true;
-			break;
-			default:
-				return false;
-			break;
-		}
+		return match ($req) {
+      "toggleMC", "get_status", "savebulk", "saveEmailSettings" => true,
+      default => false,
+  };
 	}
 
 	public function ajaxHandler(){
@@ -279,11 +258,11 @@ class Missedcall extends FreePBX_Helpers implements BMO {
 				}
 
 				if(!isset($state) || !isset($_REQUEST['extdisplay'])){
-					return array('toggle' => 'invalid');
+					return ['toggle' => 'invalid'];
 				}
 
 				$this->Toggle($_REQUEST['extdisplay']);
-				return array('toggle' => 'received');
+				return ['toggle' => 'received'];
 			break;
 			case "get_status":
 				$users = $this->getUsers();
@@ -335,13 +314,7 @@ class Missedcall extends FreePBX_Helpers implements BMO {
 					$mci 		= ($_REQUEST['action'] == "addgroup") ? true : $this->userman->getModuleSettingByGID($_REQUEST['group'],'missedcall','mci');
 					$mcx 		= ($_REQUEST['action'] == "addgroup") ? true : $this->userman->getModuleSettingByGID($_REQUEST['group'],'missedcall','mcx');
 					
-					return array(
-						array(
-							"title" => _("Missed Call"),
-							"rawname" => "missedcall",
-							"content" => load_view(__DIR__.'/views/missedcall.php',array("mode" => "group", "error" => $error, "mcenabled" => $mcenabled, "mcrg" => $mcrg, "mcq" => $mcq,"mci" =>$mci,"mcx"=>$mcx))
-						)
-					);
+					return [["title" => _("Missed Call"), "rawname" => "missedcall", "content" => load_view(__DIR__.'/views/missedcall.php',["mode" => "group", "error" => $error, "mcenabled" => $mcenabled, "mcrg" => $mcrg, "mcq" => $mcq, "mci" =>$mci, "mcx"=>$mcx])]];
 				case 'adduser':
 				case 'showuser':
 					if(isset($_REQUEST['user'])) {
@@ -353,13 +326,7 @@ class Missedcall extends FreePBX_Helpers implements BMO {
 						$mcx 		= $this->userman->getModuleSettingByID($user['id'],'missedcall','mcx',true);
 					
 					} 
-					return array(
-						array(
-							"title" => _("Missed Call"),
-							"rawname" => "missedcall",
-							"content" => load_view(__DIR__.'/views/missedcall.php',array("mode" => "user", "error" => $error, "mcenabled" => $mcenabled, "mcrg" => $mcrg, "mcq" => $mcq,"mci" =>$mci,"mcx"=>$mcx))
-						)
-                    );
+					return [["title" => _("Missed Call"), "rawname" => "missedcall", "content" => load_view(__DIR__.'/views/missedcall.php',["mode" => "user", "error" => $error, "mcenabled" => $mcenabled, "mcrg" => $mcrg, "mcq" => $mcq, "mci" =>$mci, "mcx"=>$mcx])]];
                     default:
                     return [];
 			}
@@ -374,7 +341,7 @@ class Missedcall extends FreePBX_Helpers implements BMO {
 	}
 
 	/*update user by settings */
-	private function updateUserbysettins($users=[],$setting,$value){
+	private function updateUserbysettins($users=[],$setting="",$value=""){
 		foreach ($users as $id){
 			if($setting == 'notification'){
 				$mcenabled=	$this->userman->getCombinedModuleSettingByID($id,'missedcall','mcenabled');
@@ -480,7 +447,7 @@ class Missedcall extends FreePBX_Helpers implements BMO {
 	public function usermanDelUser($id, $display, $data) {
 		$sql = "DELETE FROM `missedcall` WHERE `userid` = :userid";
 		$stmt = $this->db->prepare($sql);
-		$stmt->execute(array(':userid'=>$id));dbug($sql);dbug($id);
+		$stmt->execute([':userid'=>$id]);dbug($sql);dbug($id);
 	}
 
 	/**
@@ -676,24 +643,20 @@ class Missedcall extends FreePBX_Helpers implements BMO {
 			}
 		}
 
-		$html = array();
-		$html[0] = array(
-			"title" => _("Missed Call"),
-			"rawname" => "missedcall",
-			"content" => load_view(dirname(__FILE__)."/views/ucp_config.php",array("mode" => $mode, "enabled" => $enabled))
-		);
+		$html = [];
+		$html[0] = ["title" => _("Missed Call"), "rawname" => "missedcall", "content" => load_view(__DIR__."/views/ucp_config.php",["mode" => $mode, "enabled" => $enabled])];
 		return $html;
 	}
 
 	public function doConfigPageInit($page) {
-		$userid 	= $_REQUEST['userid'];
-		$extension 	= $_REQUEST['extension']?$_REQUEST['extension']:'';
-		$internal 	= $_REQUEST['mcinternal']?$_REQUEST['mcinternal']:'';
-		$external 	= $_REQUEST['mcexternal']?$_REQUEST['mcexternal']:'';
-		$queue 		= $_REQUEST['mcqueue']?$_REQUEST['mcqueue']:'';
-		$ringgroup 	= $_REQUEST['mcringgroup']?$_REQUEST['mcringgroup']:'';
-		$action 	= $_REQUEST['action']?$_REQUEST['action']:'';
-		$view 		= $_REQUEST['view']?$_REQUEST['view']:'';
+		$userid 	= $_REQUEST['userid']??'';
+		$extension 	= $_REQUEST['extension'] ?? '';
+		$internal 	= $_REQUEST['mcinternal'] ?? '';
+		$external 	= $_REQUEST['mcexternal'] ?? '';
+		$queue 		= $_REQUEST['mcqueue'] ?? '';
+		$ringgroup 	= $_REQUEST['mcringgroup'] ?? '';
+		$action 	= $_REQUEST['action'] ?? '';
+		$view 		= $_REQUEST['view'] ?? '';
 
 		//Handle form submissions
 		switch ($action) {
@@ -779,7 +742,7 @@ class Missedcall extends FreePBX_Helpers implements BMO {
 		$ext->splice($context, "s", "", new \ext_set('__MCEXTTOCALL','${EXTTOCALL}'),"",1);
 
 		$context = 'macro-dial';
-		$priorities = array("ndloopbegin", "huntstart");
+		$priorities = ["ndloopbegin", "huntstart"];
 		foreach($priorities as $pri) {
 			$ext->splice($context, "s", $pri, new \ext_set('__MCEXTTOCALL','${EXTTOCALL}'),"",1);
 		}
@@ -822,7 +785,8 @@ class Missedcall extends FreePBX_Helpers implements BMO {
 	 * @return Returns 1D array of all ring group numbers or null if none.
 	 **/
 	private function getRingGroups() {
-		$ringgroup_list= $this->FreePBX->Ringgroups->listRinggroups(true);
+		$rg = [];
+  $ringgroup_list= $this->FreePBX->Ringgroups->listRinggroups(true);
 		foreach ($ringgroup_list as $item) {
 			$rg[] = $item['grpnum'];
 		}
@@ -839,12 +803,13 @@ class Missedcall extends FreePBX_Helpers implements BMO {
 	 * @return Returns 1D array of all queue numbers or null if none.
 	 */
 	private function getQueues() {
-		$retval = $this->FreePBX->Queues->search('',$result);
-		$queues = array();
+		$result = null;
+  $retval = $this->FreePBX->Queues->search('',$result);
+		$queues = [];
 		if(!empty($result)){
 			foreach ($result as $queue) {
 				$pattern = "~^.*\((.*)\).*$~";
-				if(preg_match($pattern, $queue['text'], $retval)) {
+				if(preg_match($pattern, (string) $queue['text'], $retval)) {
 					$queues[]=$retval[1];
 				}
 			}
@@ -862,7 +827,7 @@ class Missedcall extends FreePBX_Helpers implements BMO {
 	 * @return Returns 1D array of all system ampusers or null if none.
 	 */
 	public function getUsers() {
-		$users = array();
+		$users = [];
 		$userman = $this->FreePBX->userman->getAllUsers();
 		foreach ($userman as $user) {
 			$users[$user['id']] = $user['default_extension'];
@@ -902,12 +867,9 @@ class Missedcall extends FreePBX_Helpers implements BMO {
 	public function getStatus($userid) {
 		$query = "SELECT * FROM missedcall WHERE userid= ?";
 		$stmt = $this->db->prepare($query);
-		$stmt->execute(array($userid));
+		$stmt->execute([$userid]);
 		$data = $stmt->fetch(\PDO::FETCH_ASSOC);
-		if(isset($data['notification'])){
-			return $data['notification'];
-		}
-		return 0;
+		return $data['notification'] ?? 0;
 	}
 
 	/**
@@ -925,7 +887,7 @@ class Missedcall extends FreePBX_Helpers implements BMO {
 			$sql = "UPDATE `missedcall` SET `extension`= :ext ,`notification` = :value WHERE `userid` = :userid";
 		}
 		$stmt = $this->db->prepare($sql);
-		$stmt->execute(array(':userid'=>$userid,':ext'=>$exten,':value'=>1));
+		$stmt->execute([':userid'=>$userid, ':ext'=>$exten, ':value'=>1]);
 		//update the Userman
 		if($from){
 			$this->userman->setModuleSettingByID($userid,'missedcall','mcenabled',true);
@@ -949,7 +911,7 @@ class Missedcall extends FreePBX_Helpers implements BMO {
 			$sql = "UPDATE `missedcall` SET `extension`= :ext ,`notification` = :value WHERE `userid` = :userid";
 		}
 		$stmt = $this->db->prepare($sql);
-		$stmt->execute(array(':userid'=>$userid,':ext'=>$exten,':value'=>0));
+		$stmt->execute([':userid'=>$userid, ':ext'=>$exten, ':value'=>0]);
 		if($from){
 			$this->userman->setModuleSettingByID($userid,'missedcall','mcenabled',false);
 		}
@@ -1039,7 +1001,7 @@ class Missedcall extends FreePBX_Helpers implements BMO {
 		// check to see if this is a new record or updating old record
 		$query = "SELECT * from missedcall where userid = ?";
 		$stm = $this->db->prepare($query);
-		$stm->execute(array($id));
+		$stm->execute([$id]);
 		$result = $stm->fetch(\PDO::FETCH_ASSOC);
 
 		if (isset($result['userid'])) {
@@ -1062,7 +1024,7 @@ class Missedcall extends FreePBX_Helpers implements BMO {
 		// check to see if this is a new record or updating old record
 		$query = "SELECT * from missedcall where userid = ?";
 		$stm = $this->db->prepare($query);
-		$stm->execute(array($userid));
+		$stm->execute([$userid]);
 		$result = $stm->fetch(\PDO::FETCH_ASSOC);
 		$dbinsert = false;
 		if(!isset($result['userid'])){
@@ -1110,7 +1072,7 @@ class Missedcall extends FreePBX_Helpers implements BMO {
 		}
 
 		$stmt = $this->db->prepare($sql);
-		$stmt->execute(array("value" => $value,"userid"=>$userid, "extension" => $extension));
+		$stmt->execute(["value" => $value, "userid"=>$userid, "extension" => $extension]);
 		return;
 	}
 
@@ -1137,15 +1099,7 @@ class Missedcall extends FreePBX_Helpers implements BMO {
 	}
 
 	public function sendModuleLicenseInformation($data) {
-		return array(
-			array(
-				"name" => "Missed Call Notify",
-				"expires" => true,
-				"keyname" => "missedcallnotify_exp",
-				"tie_in" => array(),
-				"module" => true,
-			),
-		);
+		return [["name" => "Missed Call Notify", "expires" => true, "keyname" => "missedcallnotify_exp", "tie_in" => [], "module" => true]];
 	}
 
 	private function deleteTable(){
@@ -1171,9 +1125,9 @@ class Missedcall extends FreePBX_Helpers implements BMO {
             $sth->bindParam(':templateName', $templateName);
             $sth->execute();
             $result = $sth->fetch(\PDO::FETCH_ASSOC);
-            $results = !empty($result['templateContent']) ? json_decode($result['templateContent'], true) : array();
+            $results = !empty($result['templateContent']) ? json_decode((string) $result['templateContent'], true, 512, JSON_THROW_ON_ERROR) : [];
             if ($key) {
-                return isset($results[$key]) ? $results[$key] : null;
+                return $results[$key] ?? null;
             } else {
                 return $results;
             }
@@ -1188,11 +1142,11 @@ class Missedcall extends FreePBX_Helpers implements BMO {
     public function replaceTemplateVariables($template, $variablesData)
     {
         if ($template) {
-            if (preg_match('/{{([\w|\d]*)}}/', $template)) {
-                preg_match_all('/{{([\w|\d]*)}}/', $template, $matches);
+            if (preg_match('/{{([\w|\d]*)}}/', (string) $template)) {
+                preg_match_all('/{{([\w|\d]*)}}/', (string) $template, $matches);
                 foreach ($matches[1] as $match) {
                     $replacement = !empty($variablesData[$match]) ? $variablesData[$match] : '';
-                    $template = str_replace('{{' . $match . '}}', $replacement, $template);
+                    $template = str_replace('{{' . $match . '}}', $replacement, (string) $template);
                 }
             }
         }
@@ -1220,21 +1174,21 @@ class Missedcall extends FreePBX_Helpers implements BMO {
 
             if (isset($templateContent['type']) && isset($templateContent['body'])) {
                 if ($templateContent['type'] == self::EMAIL_TYPE_HTML) {
-                    $templateContent['body'] = filter_var(htmlentities($templateContent['body'], ENT_QUOTES), FILTER_SANITIZE_STRING);
+                    $templateContent['body'] = filter_var(htmlentities((string) $templateContent['body'], ENT_QUOTES), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
                 } else {
-                    $templateContent['body'] = filter_var($templateContent['body'], FILTER_SANITIZE_STRING);
+                    $templateContent['body'] = filter_var($templateContent['body'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
                 }
             }
 
             if (isset($templateContent['type']) && isset($templateContent['subject'])) {
                 if ($templateContent['type'] == self::EMAIL_TYPE_HTML) {
-                    $templateContent['subject'] = filter_var(htmlentities($templateContent['subject'], ENT_QUOTES), FILTER_SANITIZE_STRING);
+                    $templateContent['subject'] = filter_var(htmlentities((string) $templateContent['subject'], ENT_QUOTES), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
                 } else {
-                    $templateContent['subject'] = filter_var($templateContent['subject'], FILTER_SANITIZE_STRING);
+                    $templateContent['subject'] = filter_var($templateContent['subject'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
                 }
             }
 
-            $templateContent = json_encode($templateContent);
+            $templateContent = json_encode($templateContent, JSON_THROW_ON_ERROR);
             $time = time();
             $sql = "INSERT INTO missedcall_email_templates (`name`, `time`, `templateContent`) VALUES (:templateName,:time, :templateContent) ON DUPLICATE KEY UPDATE templateContent = :templateContent, time = :time";
             $sth = $this->db->prepare($sql);
@@ -1250,21 +1204,21 @@ class Missedcall extends FreePBX_Helpers implements BMO {
     public function saveEmailSettings($request)
     {
 		if (!isset($request['emailType']) || empty($request['emailType'])) {
-			return array('status' => false, 'message' => _('Email type is required'));
+			return ['status' => false, 'message' => _('Email type is required')];
 		}
 
-		$emailType = filter_var(isset($request['emailType']) ? $request['emailType'] : self::EMAIL_TYPE_HTML, FILTER_SANITIZE_STRING);
+		$emailType = filter_var($request['emailType'] ?? self::EMAIL_TYPE_HTML, FILTER_SANITIZE_FULL_SPECIAL_CHARS );
 
 		if (!isset($request['subject']) || empty($request['subject'])) {
-			return array('status' => false, 'message' => _('Email subject is required'));
+			return ['status' => false, 'message' => _('Email subject is required')];
 		}
 
 		if (!isset($request['body']) || empty($request['body'])) {
-			return array('status' => false, 'message' => _('Email body is required'));
+			return ['status' => false, 'message' => _('Email body is required')];
 		}
 
-		$subject = filter_var(isset($request['subject']) ? $request['subject'] : self::EMAIL_SUBJECT, FILTER_SANITIZE_STRING);
-		$body = isset($_REQUEST['body']) ? $_REQUEST['body'] : file_get_contents(__DIR__ . '/views/mail.tpl');
+		$subject = filter_var($request['subject'] ?? self::EMAIL_SUBJECT, FILTER_SANITIZE_FULL_SPECIAL_CHARS );
+		$body = $_REQUEST['body'] ?? file_get_contents(__DIR__ . '/views/mail.tpl');
 
 		$templateName = 'notification_mail';
 		$this->setMailTemplate($templateName, [
@@ -1272,15 +1226,15 @@ class Missedcall extends FreePBX_Helpers implements BMO {
 			'subject' => $subject,
 			'body' => $body,
 		]);
-        return array('status' => true, 'message' => _('Email settings saved successfully'));
+        return ['status' => true, 'message' => _('Email settings saved successfully')];
     }
 
 	public function getMailSettingsForm(){
 		
 		$mailTemplate = $this->getMailTemplate('notification_mail');
-		$emailType = isset($mailTemplate['type']) ? $mailTemplate['type'] : '';
-		$subject = isset($mailTemplate['subject']) ? $mailTemplate['subject'] : '';
-		$body = isset($mailTemplate['body']) ? $mailTemplate['body'] : '';
+		$emailType = $mailTemplate['type'] ?? '';
+		$subject = $mailTemplate['subject'] ?? '';
+		$body = $mailTemplate['body'] ?? '';
 
 		$templateData = [
 				[
@@ -1323,53 +1277,21 @@ class Missedcall extends FreePBX_Helpers implements BMO {
 
 	//BulkHandler hooks
 	public function bulkhandlerGetTypes() {
-		return array(
-			'missedcall' => array(
-				'name' => _('missedcall'),
-				'description' => _('Import/Export missedcall')
-			)
-		);
+		return ['missedcall' => ['name' => _('missedcall'), 'description' => _('Import/Export missedcall')]];
 	}
 	
 	public function bulkhandlerGetHeaders($type) {
-		switch($type){
+		$headers = [];
+  switch($type){
 			case 'missedcall':
-				$headers = array();
-				$headers['username'] = array(
-					'required' => false,
-					'identifier' => _("username"),
-					'description' => _("The user name of missedcall")
-				);
-				$headers['extension'] = array(
-					'required' => true,
-					'identifier' => _("extension"),
-					'description' => _("extension of user ,user will be identified using this extension")
-				);
-				$headers['enabled'] = array(
-					'required' => false,
-					'identifier' => _("enabled"),
-					'description' => _("notification of missedcall")
-				);
-				$headers['queue'] = array(
-					'required' => false,
-					'identifier' => _("queue"),
-					'description' => _("Notify queue missedcall")
-				);
-				$headers['ringgroup'] = array(
-					'required' => false,
-					'identifier' => _("ringgroup"),
-					'description' => _("Notify ringgroup missedcall")
-				);
-				$headers['internal'] = array(
-					'required' => false,
-					'identifier' => _("internal"),
-					'description' => _("Notify internal  missedcall")
-				);
-				$headers['external'] = array(
-					'required' => false,
-					'identifier' => _("external"),
-					'description' => _("Notify external missedcall")
-				);
+				$headers = [];
+				$headers['username'] = ['required' => false, 'identifier' => _("username"), 'description' => _("The user name of missedcall")];
+				$headers['extension'] = ['required' => true, 'identifier' => _("extension"), 'description' => _("extension of user ,user will be identified using this extension")];
+				$headers['enabled'] = ['required' => false, 'identifier' => _("enabled"), 'description' => _("notification of missedcall")];
+				$headers['queue'] = ['required' => false, 'identifier' => _("queue"), 'description' => _("Notify queue missedcall")];
+				$headers['ringgroup'] = ['required' => false, 'identifier' => _("ringgroup"), 'description' => _("Notify ringgroup missedcall")];
+				$headers['internal'] = ['required' => false, 'identifier' => _("internal"), 'description' => _("Notify internal  missedcall")];
+				$headers['external'] = ['required' => false, 'identifier' => _("external"), 'description' => _("Notify external missedcall")];
 			break;
 		}
 		return $headers;
@@ -1400,7 +1322,7 @@ class Missedcall extends FreePBX_Helpers implements BMO {
 	}
 
 	private function userManSettingTransilate($val=""){
-		$val = trim($val);
+		$val = trim((string) $val);
 		if($val =="1"){
 			return "yes";
 		}elseif($val == "0") {
@@ -1419,16 +1341,14 @@ class Missedcall extends FreePBX_Helpers implements BMO {
 						$ret = $this->addMissedcallRow($data);
 					}
 				}
-				$ret = array(
-					'status' => true,
-				);
+				$ret = ['status' => true];
 			break;
 		}
 		return $ret;
 	}
 
 	public function addMissedcallRow($data) {
-		$params =array();
+		$params =[];
 		if(!isset($data['extension'])){
 			return false;
 		}
@@ -1448,7 +1368,7 @@ class Missedcall extends FreePBX_Helpers implements BMO {
 		return true;
 	}
 	private function userManSettingTransilateback($val){
-		$val = trim($val);
+		$val = trim((string) $val);
 		if(strtolower($val) === "yes"){
 			return "1";
 		}elseif(strtolower($val) === "no") {

@@ -16,27 +16,28 @@
 	$tabindex 	= 0;
 	$dispnum 	= 'missedcall'; //used for switch on config.php
 	$heading 	= '<i class="fa fa-envelope"></i> '._("Missed Call Notification");
-	$view 		= isset($request['view']) ? $request['view'] : '';
+	$view 		= $request['view'] ?? '';
 	$emailLayout= false;
+	$error??='';
 	switch($view){
 		case "form":
 			$border = "full";
 			if($request['userid'] != ''){
-				$heading 		.= ": Edit ".ltrim($request['userid'],'GRP-');
+				$heading 		.= ": Edit ".ltrim((string) $request['userid'],'GRP-');
 				$user 	  		 = $um->getUserByID($request["userid"]);
 				$request["mcrg"] = $um->getCombinedModuleSettingByID($user['id'],'missedcall','mcrg',false, true);
 				$request["mcq"]  = $um->getCombinedModuleSettingByID($user['id'],'missedcall','mcq', false, true);
 				$request['internal'] = $um->getCombinedModuleSettingByID($user['id'],'missedcall','mci');
 				$request['external'] = $um->getCombinedModuleSettingByID($user['id'],'missedcall','mcx');
 		
-				$content = load_view(__DIR__.'/views/form.php', array('request' => $request));
+				$content = load_view(__DIR__.'/views/form.php', ['request' => $request]);
 			}else{
-				$content = load_view(__DIR__.'/views/grid.php', array('error' => $error));
+				$content = load_view(__DIR__.'/views/grid.php', ['error' => $error]);
 			}
 		break;
 		default:
 			$border 	= "no";
-			$content	= load_view(__DIR__.'/views/grid.php', array('error' => $error));
+			$content	= load_view(__DIR__.'/views/grid.php', ['error' => $error]);
 			$emailLayout = $mcn->getMailSettingsForm();
 		break;
 	}

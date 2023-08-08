@@ -3,14 +3,14 @@ if (function_exists('proc_nice')) {
 	@proc_nice(10);
 }
 $bootstrap_settings['include_compress'] = false;
-$restrict_mods = array('missedcall' => true);
-if (!@include_once(getenv('FREEPBX_CONF') ? getenv('FREEPBX_CONF') : '/etc/freepbx.conf')) {
+$restrict_mods = ['missedcall' => true];
+if (!@include_once(getenv('FREEPBX_CONF') ?: '/etc/freepbx.conf')) {
 	include_once('/etc/asterisk/freepbx.conf');
 }
 //wait for some time to finish the channel activites 
 sleep(3);
 $freepbx = \FreePBX::Create();
-$json = json_decode(base64_decode($argv[1]),true);
+$json = json_decode(base64_decode($argv[1]),true, 512, JSON_THROW_ON_ERROR);
 $McObj = $freepbx->Missedcall();
 $linkedid = $json['uniqueid'];
 	$queue = $json['queue'];

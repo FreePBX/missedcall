@@ -4,7 +4,7 @@ foreach($list as $mc_ext){
 
 	$mc_status = FreePBX::Missedcall()->getStatus($mc_ext);
 	$rows .= '<tr>';
-	$rows .= '<td><a href="/admin/config.php?display=missedcall&amp;view=form&amp;extdisplay='.urlencode($mc_ext).'"><i class="fa fa-edit"></i>&nbsp;'.$mc_ext.'</a></td>';
+	$rows .= '<td><a href="/admin/config.php?display=missedcall&amp;view=form&amp;extdisplay='.urlencode((string) $mc_ext).'"><i class="fa fa-edit"></i>&nbsp;'.$mc_ext.'</a></td>';
 	$rows .= '<td>';
 	$rows .= '<span class="radioset">';
 	$rows .= '<input type="radio" name="mctoggle'.$mc_ext.'" id="mctoggle'.$mc_ext.'yes" data-for="'.$mc_ext.'" '.($mc_status == true?'CHECKED':'').'>';
