@@ -10,9 +10,9 @@ use Exception;
 
 class Missedcall extends FreePBX_Helpers implements BMO {
 	
-    final public const EMAIL_TYPE_HTML = 'html';
-    final public const EMAIL_TYPE_TEXT = 'text';
-    final public const EMAIL_SUBJECT = 'Missed call from {{calleridname}}';
+    public const EMAIL_TYPE_HTML = 'html';
+    public const EMAIL_TYPE_TEXT = 'text';
+    public const EMAIL_SUBJECT = 'Missed call from {{calleridname}}';
 
 	private bool $licensed = false;
 
@@ -224,10 +224,15 @@ class Missedcall extends FreePBX_Helpers implements BMO {
 
 	//This method declares which are valid ajax commands...
 	public function ajaxRequest($req, &$setting) {
-		return match ($req) {
-      "toggleMC", "get_status", "savebulk", "saveEmailSettings" => true,
-      default => false,
-  };
+		switch ($req) {
+			case "toggleMC":
+			case "get_status":
+			case "savebulk":
+			case "saveEmailSettings":
+				return true;
+			default:
+				return false;
+		}
 	}
 
 	public function ajaxHandler(){

@@ -165,10 +165,15 @@ class Missedcall extends Modules {
 	 * @return boolean                True if allowed or false if not allowed
 	 */
 	public function ajaxRequest($command, $settings) {
-		return match ($command) {
-			'mcsave' => true,
-			default => false,
-		};
+		switch($command)
+		{
+			case 'mcsave':
+				return true;
+			break;
+
+			default:
+				return false;
+		}
 	}
 
 	/**
