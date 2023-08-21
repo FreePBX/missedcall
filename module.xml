@@ -1,7 +1,7 @@
 <module>
 	<rawname>missedcall</rawname>
 	<name>Missed Call Notification</name>
-	<version>16.0.9</version>
+	<version>17.0.1</version>
 	<publisher>Sangoma Technologies Corporation</publisher>
 	<license>GPLv3+</license>
 	<licenselink>https://www.gnu.org/licenses/gpl-3.0.txt</licenselink>
@@ -11,21 +11,12 @@
 		<missedcall>Missed Call Notification</missedcall>
 	</menuitems>
 	<changelog>
-		*16.0.9* FREEPBX-24287 
-		*16.0.8* FREEPBX-24238 
-		*16.0.7* FREEI-8 Using user manager defined timezone for email notification 
-		*16.0.6* Packaging of ver 16.0.6
-		*16.0.5* FREEI-5697 
-		*16.0.4* FREEI-5697 
-		*16.0.3* FREEPBX-24049 and FREEPBX-24050 
-		*16.0.2* FREEPBX-24033 
-		*16.0.1* FREEPBX-24005 
-		*16.0.0* Initial release for 16.0
+		*17.0.1* Initial release for 17.0
 	</changelog>
 	<description>Send email notifications to users when a call is missed</description>
 	<category>Applications</category>
 	<supported>
-		<version>16.0</version>
+		<version>17.0</version>
 	</supported>
 	<depends>
 		<phpversion>7.4</phpversion>
