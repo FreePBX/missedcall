@@ -331,7 +331,7 @@ class Missedcall extends FreePBX_Helpers implements BMO {
 						$mcx 		= $this->userman->getModuleSettingByID($user['id'],'missedcall','mcx',true);
 					
 					} 
-					return [["title" => _("Missed Call"), "rawname" => "missedcall", "content" => load_view(__DIR__.'/views/missedcall.php',["mode" => "user", "error" => $error, "mcenabled" => $mcenabled, "mcrg" => $mcrg, "mcq" => $mcq, "mci" =>$mci, "mcx"=>$mcx])]];
+					return [["title" => _("Missed Call"), "rawname" => "missedcall", "content" => load_view(__DIR__.'/views/missedcall.php',["mode" => "user", "error" => $error, "mcenabled" => $mcenabled ?? '', "mcrg" => $mcrg ?? '', "mcq" => $mcq ?? '', "mci" =>$mci ?? '', "mcx"=>$mcx ?? ''])]];
                     default:
                     return [];
 			}
