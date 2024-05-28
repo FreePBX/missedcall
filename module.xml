@@ -1,7 +1,7 @@
 <module>
 	<rawname>missedcall</rawname>
 	<name>Missed Call Notification</name>
-	<version>17.0.1</version>
+	<version>17.0.1.1</version>
 	<publisher>Sangoma Technologies Corporation</publisher>
 	<license>GPLv3+</license>
 	<licenselink>https://www.gnu.org/licenses/gpl-3.0.txt</licenselink>
@@ -11,7 +11,7 @@
 		<missedcall>Missed Call Notification</missedcall>
 	</menuitems>
 	<changelog>
-		*17.0.1* Initial release for 17.0
+		*17.0.1.1* Initial release for 17.0
 	</changelog>
 	<description>Send email notifications to users when a call is missed</description>
 	<category>Applications</category>
@@ -20,9 +20,9 @@
 	</supported>
 	<depends>
 		<phpversion>7.4</phpversion>
-		<module>framework ge 16.0.30</module>
-		<module>core ge 16.0.65.4</module>
-		<module>userman ge 16.0.35.2</module>
+		<module>framework ge 17.0.1</module>
+		<module>core ge 17.0.1</module>
+		<module>userman ge 17.0.1</module>
 	</depends>
 	<hooks>
 		<ucp class="Ucp">

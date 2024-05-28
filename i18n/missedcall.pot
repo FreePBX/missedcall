@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-05-24 01:16-0400\n"
+"POT-Creation-Date: 2024-05-28 09:49-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -56,7 +56,7 @@ msgstr ""
 msgid "Back"
 msgstr ""
 
-#: ucp/Missedcall.class.php:236
+#: ucp/Missedcall.class.php:255
 #, php-format
 msgid "Bad extension: '%s'!"
 msgstr ""
@@ -252,8 +252,8 @@ msgstr ""
 #: Missedcall.class.php:322
 #: Missedcall.class.php:334
 #: Missedcall.class.php:652
-#: ucp/Missedcall.class.php:72
-#: ucp/Missedcall.class.php:124
+#: ucp/Missedcall.class.php:56
+#: ucp/Missedcall.class.php:143
 msgid "Missed Call"
 msgstr ""
 
@@ -278,7 +278,11 @@ msgstr ""
 msgid "Missed Call Notification Toggle"
 msgstr ""
 
-#: ucp/Missedcall.class.php:81
+#: ucp/Missedcall.class.php:107
+msgid "Missed Call is not enabled for this user."
+msgstr ""
+
+#: ucp/Missedcall.class.php:69
 msgid "Missed call"
 msgstr ""
 
@@ -288,16 +292,6 @@ msgstr ""
 
 #: assets/js/missedcall.js:50
 msgid "Missed call notification is already enabled"
-msgstr ""
-
-#: ucp/Missedcall.class.php:59
-#, php-format
-msgid "Missedcall -- User account '%s' Not allowed to use this UCP widget."
-msgstr ""
-
-#: ucp/Missedcall.class.php:65
-#, php-format
-msgid "Missedcall -- User account '%s' doesn't have a valid email address!"
 msgstr ""
 
 #: views/form.php:32
@@ -372,7 +366,7 @@ msgstr ""
 msgid "Queue call notification"
 msgstr ""
 
-#: ucp/Missedcall.class.php:83
+#: ucp/Missedcall.class.php:71
 msgid "Receive an email for any missed call."
 msgstr ""
 
@@ -404,7 +398,7 @@ msgstr ""
 msgid "Save Email Settings"
 msgstr ""
 
-#: ucp/Missedcall.class.php:234
+#: ucp/Missedcall.class.php:253
 msgid "Saved"
 msgstr ""
 
@@ -459,6 +453,10 @@ msgstr ""
 
 #: assets/js/missedcall.js:271
 msgid "There was an error updating setting"
+msgstr ""
+
+#: ucp/Missedcall.class.php:114
+msgid "This user doesn't have a valid email address."
 msgstr ""
 
 #: assets/js/missedcall.js:174
