@@ -50,23 +50,7 @@ class Missedcall extends Modules {
 	 * @return array               Array of information
 	 */
 	public function getSimpleWidgetList() {
-		//Category for the widgets
-		$user      = $this->user;
-		$ext       = !empty($user["default_extension"]) ? $user["default_extension"] : Null;
-		$mc_params = $this->mc->get($user['id'] ?? '');
-
-		if (!$this->enabled) {
-			dbug(sprintf(_("Missedcall -- User account '%s' Not allowed to use this UCP widget."), $user["username"] ?? ''));
-			return false;
-		}
-
-		if (empty($mc_params["email"])) {
-			// The code below is useful. 
-			dbug(sprintf(_("Missedcall -- User account '%s' doesn't have a valid email address!"), $user["username"]));
-			return false;
-		}
-
-		$widget = [
+		$responseData = array(
 			"rawname" => "missedcall",
 			//Module Rawname
 			"display" => _("Missed Call"),
@@ -74,10 +58,14 @@ class Missedcall extends Modules {
 			"icon"    => "fa fa-eye-slash",
 			//The Widget Icon from http://fontawesome.io/icons/
 			"list"    => [],
-		];
+		);
+		$errors = $this->validate();
+		if ($errors['hasError']) {
+			return array_merge($responseData, $errors);
+		}
 
 		//Individual Widgets
-		$widget['list']["missedcall"] = [
+		$widgets["missedcall"] = [
 			"display"     => _("Missed call"),
 			//Widget Subtitle
 			"description" => _("Receive an email for any missed call."),
@@ -90,7 +78,9 @@ class Missedcall extends Modules {
 			//If set to true then this widget can be added multiple times, if false then this widget can only be added once per dashboard!
 			"defaultsize" => [ "height" => 9, "width" => 2 ],
 		];
-		return $widget;
+
+		$responseData['list'] = $widgets;
+		return $responseData;
 	}
 
 	/**
@@ -104,6 +94,30 @@ class Missedcall extends Modules {
 	}
 
 	/**
+	 * validate against rules
+	 */
+	private function validate() {
+		$data = array(
+			'hasError' => false,
+			'errorMessages' => []
+		);
+
+		if (!$this->enabled) {
+			$data['hasError'] = true;
+			$data['errorMessages'][] = _('Missed Call is not enabled for this user.');
+		}
+
+		$user      = $this->user;
+		$mc_params = $this->mc->get($user['id'] ?? '');
+		if (empty($mc_params["email"])) {
+			$data['hasError'] = true;
+			$data['errorMessages'][] = _("This user doesn't have a valid email address.");
+		}
+
+		return $data;
+	}
+
+	/**
 	 * Get Simple Widget Display
 	 * @method getWidgetDisplay
 	 * @link https://wiki.freepbx.org/pages/viewpage.action?pageId=71271742#DevelopingforUCP14+-getSimpleWidgetDisplay
@@ -112,6 +126,11 @@ class Missedcall extends Modules {
 	 * @return array               Array of information
 	 */
 	public function getSimpleWidgetDisplay($id, $uuid) {
+		$errors = $this->validate();
+		if ($errors['hasError']) {
+			return $errors;
+		}
+
 		$widget = [];
 		switch ($id) {
 			case "missedcall":
