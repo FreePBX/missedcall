@@ -23,6 +23,7 @@
 		<module>framework ge 17.0.1</module>
 		<module>core ge 17.0.1</module>
 		<module>userman ge 17.0.1</module>
+		<module>queues ge 17.0.1</module>
 	</depends>
 	<hooks>
 		<ucp class="Ucp">
