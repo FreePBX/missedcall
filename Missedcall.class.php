@@ -745,6 +745,10 @@ class Missedcall extends FreePBX_Helpers implements BMO {
 		$context = 'macro-dial-one';
 		$ext->splice($context, "s", "", new \ext_set('__MCMULTI','${MD5(${DEXTEN}${FROMEXTEN})}'),"",1);
 		$ext->splice($context, "s", "", new \ext_set('__MCEXTTOCALL','${EXTTOCALL}'),"",1);
+		//dialOne-with-exten
+                $context = "dialOne-with-exten";
+                $ext->splice($context, "_X", 0, new \ext_set('CHANNEL(hangup_handler_push)','app-missedcall-hangup,${DialMCEXT},1'),"",1);
+                $ext->splice($context, "_[+-X].", 0, new \ext_set('CHANNEL(hangup_handler_push)','app-missedcall-hangup,${DialMCEXT},1'),"",1);
 
 		$context = 'macro-dial';
 		$priorities = ["ndloopbegin", "huntstart"];
