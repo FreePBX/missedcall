@@ -49,7 +49,7 @@
 	<?php
     // At some point we can probably kill this... Maybe make is a 1 time panel that may be dismissed
     $box_info_description = "<p style='margin-bottom:0px;'>" . sprintf(_("A missed call notification feature that alerts the user when a call has been made to their device / extension but was not answered. This feature typically sends an alert to the user via email, indicating that a call was missed and providing the caller's phone number or contact information. This feature is designed to help users quickly and easily return calls they may have missed.")) . "</p>";
-    $box_info_description .= "<p>" . _("For more information see: ") . "<a href='https://wiki.freepbx.org/display/FPG/MissedCall+Notification' target='_blank'>https://wiki.freepbx.org/display/FPG/MissedCall+Notification</a> </p>";
+    $box_info_description .= "<p>" . _("For more information see: ") . "<a href='https://sangomakb.atlassian.net/wiki/spaces/PG/pages/24543299/MissedCall+Notification' target='_blank'>https://sangomakb.atlassian.net/wiki/spaces/PG/pages/24543299/MissedCall+Notification</a> </p>";
     echo show_help($box_info_description, sprintf(_('What is Missed Call Notification ?')), false, true, "info");
     unset($box_info_description);
 	if($view != 'form'){
