@@ -46,7 +46,7 @@ class Missedcall extends Modules {
 	/**
 	 * Get Simple Widget List
 	 * @method getSimpleWidgetList
-	 * @link https://wiki.freepbx.org/pages/viewpage.action?pageId=71271742#DevelopingforUCP14+-getSimpleWidgetList
+	 * @link https://sangomakb.atlassian.net/wiki/spaces/FP/pages/10093196/Developing+for+UCP+14#getSimpleWidgetList
 	 * @return array               Array of information
 	 */
 	public function getSimpleWidgetList() {
@@ -86,7 +86,7 @@ class Missedcall extends Modules {
 	/**
 	 * Get Widget List
 	 * @method getWidgetList
-	 * @link https://wiki.freepbx.org/pages/viewpage.action?pageId=71271742#DevelopingforUCP14+-getWidgetList
+	 * @link https://sangomakb.atlassian.net/wiki/spaces/FP/pages/10093196/Developing+for+UCP+14#getWidgetList
 	 * @return array               Array of information
 	 */
 	public function getWidgetList() {
@@ -120,7 +120,7 @@ class Missedcall extends Modules {
 	/**
 	 * Get Simple Widget Display
 	 * @method getWidgetDisplay
-	 * @link https://wiki.freepbx.org/pages/viewpage.action?pageId=71271742#DevelopingforUCP14+-getSimpleWidgetDisplay
+	 * @link https://sangomakb.atlassian.net/wiki/spaces/FP/pages/10093196/Developing+for+UCP+14#getSimpleWidgetDisplay
 	 * @param  string           $id The widget id. This is the key of the 'list' array in getSimpleWidgetList
 	 * @param  string           $uuid The generated UUID of the widget on this dashboard
 	 * @return array               Array of information
@@ -149,7 +149,7 @@ class Missedcall extends Modules {
 	/**
 	 * Get Widget Display
 	 * @method getWidgetDisplay
-	 * @link https://wiki.freepbx.org/pages/viewpage.action?pageId=71271742#DevelopingforUCP14+-getSimpleWidgetDisplay
+	 * @link https://sangomakb.atlassian.net/wiki/spaces/FP/pages/10093196/Developing+for+UCP+14#getWidgetDisplay
 	 * @param  string           $id The widget id. This is the key of the 'list' array in getWidgetList
 	 * @param  string           $uuid The UUID of the widget
 	 * @return array               Array of information
@@ -161,9 +161,9 @@ class Missedcall extends Modules {
 	/**
 	 * Poll for information
 	 * @method poll
-	 * @link https://wiki.freepbx.org/pages/viewpage.action?pageId=71271742#DevelopingforUCP14+-poll(PHP)
-	 * @param $data               Data from Javascript prepoll function (if any). See: https://wiki.freepbx.org/pages/viewpage.action?pageId=71271742#DevelopingforUCP14+-prepoll
-	 * @return mixed              Data you'd like to send back to the javascript for this module. See: https://wiki.freepbx.org/pages/viewpage.action?pageId=71271742#DevelopingforUCP14+-poll(Javascript)
+	 * @link https://sangomakb.atlassian.net/wiki/spaces/FP/pages/10093196/Developing+for+UCP+14#poll-(PHP)
+	 * @param $data               Data from Javascript prepoll function (if any). See: https://sangomakb.atlassian.net/wiki/spaces/FP/pages/10093196/Developing+for+UCP+14#prepoll
+	 * @return mixed              Data you'd like to send back to the javascript for this module. See: https://sangomakb.atlassian.net/wiki/spaces/FP/pages/10093196/Developing+for+UCP+14#poll-(Javascript)
 	 */
 	public function poll($data) {
 		$user      = $this->user;
@@ -178,7 +178,7 @@ class Missedcall extends Modules {
 	/**
 	 * Ajax Request
 	 * @method ajaxRequest
-	 * @link https://wiki.freepbx.org/display/FOP/BMO+Ajax+Calls#BMOAjaxCalls-ajaxRequest
+	 * @link https://sangomakb.atlassian.net/wiki/spaces/FP/pages/10420542/BMO+Ajax+Calls#ajaxRequest
 	 * @param  string      $command  The command name
 	 * @param  array      $settings Returned array settings
 	 * @return boolean                True if allowed or false if not allowed
@@ -198,7 +198,7 @@ class Missedcall extends Modules {
 	/**
 	 * Ajax Handler
 	 * @method ajaxHandler
-	 * @link https://wiki.freepbx.org/display/FOP/BMO+Ajax+Calls#BMOAjaxCalls-ajaxHandler
+	 * @link https://sangomakb.atlassian.net/wiki/spaces/FP/pages/10420542/BMO+Ajax+Calls#ajaxHandler
 	 * @return mixed      Data to return to Javascript
 	 */
 	public function ajaxHandler() {
