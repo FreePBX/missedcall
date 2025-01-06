@@ -1,7 +1,7 @@
 <module>
 	<rawname>missedcall</rawname>
 	<name>Missed Call Notification</name>
-	<version>17.0.2</version>
+	<version>17.0.3</version>
 	<publisher>Sangoma Technologies Corporation</publisher>
 	<license>GPLv3+</license>
 	<licenselink>https://www.gnu.org/licenses/gpl-3.0.txt</licenselink>
@@ -11,6 +11,7 @@
 		<missedcall>Missed Call Notification</missedcall>
 	</menuitems>
 	<changelog>
+		*17.0.3* Fixing Github #607 Minor changes for Missed Calls module 
 		*17.0.2* Fixing Github #449 Missed call not working 
 		*17.0.1.2* Initial release for 17.0
 	</changelog>
