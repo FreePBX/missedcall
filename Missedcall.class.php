@@ -346,7 +346,7 @@ class Missedcall extends FreePBX_Helpers implements BMO {
 	}
 
 	/*update user by settings */
-	private function updateUserbysettins($users=[],$setting="",$value=""){
+	private function updateUserBySettings($users=[],$setting="",$value=""){
 		foreach ($users as $id){
 			if($setting == 'notification'){
 				$mcenabled=	$this->userman->getCombinedModuleSettingByID($id,'missedcall','mcenabled');
@@ -396,48 +396,48 @@ class Missedcall extends FreePBX_Helpers implements BMO {
 			if(isset($_POST['mcenabled'])) {
 				if($_POST['mcenabled'] == "true") {
 					$this->userman->setModuleSettingByGID($id,'missedcall','mcenabled',true);
-					$this->updateUserbysettins($data['users'],'notification',1);
+					$this->updateUserBySettings($data['users'],'notification',1);
 				} else {
 					$this->userman->setModuleSettingByGID($id,'missedcall','mcenabled',false);
-					$this->updateUserbysettins($data['users'],'notification',0);
+					$this->updateUserBySettings($data['users'],'notification',0);
 				}
 			}
 
 			if(isset($_POST['mcrg'])) {
 				if($_POST['mcrg'] == "true") {
 					$this->userman->setModuleSettingByGID($id,'missedcall','mcrg',true);
-					$this->updateUserbysettins($data['users'],'ringgroup',1);
+					$this->updateUserBySettings($data['users'],'ringgroup',1);
 				} else {
 					$this->userman->setModuleSettingByGID($id,'missedcall','mcrg',false);
-					$this->updateUserbysettins($data['users'],'ringgroup',0);
+					$this->updateUserBySettings($data['users'],'ringgroup',0);
 				}
 			}
 
 			if(isset($_POST['mcq'])) {
 				if($_POST['mcq'] == "true") {
 					$this->userman->setModuleSettingByGID($id,'missedcall','mcq',true);
-					$this->updateUserbysettins($data['users'],'queue',1);
+					$this->updateUserBySettings($data['users'],'queue',1);
 				} else {
 					$this->userman->setModuleSettingByGID($id,'missedcall','mcq',false);
-					$this->updateUserbysettins($data['users'],'queue',0);
+					$this->updateUserBySettings($data['users'],'queue',0);
 				}
 			}
 			if(isset($_POST['mci'])) {
 				if($_POST['mci'] == "true") {
 					$this->userman->setModuleSettingByGID($id,'missedcall','mci',true);
-					$this->updateUserbysettins($data['users'],'internal',1);
+					$this->updateUserBySettings($data['users'],'internal',1);
 				} else{
 					$this->userman->setModuleSettingByGID($id,'missedcall','mci',false);
-					$this->updateUserbysettins($data['users'],'internal',0);
+					$this->updateUserBySettings($data['users'],'internal',0);
 				}
 			}
 			if(isset($_POST['mcx'])) {
 				if($_POST['mcx'] == "true") {
 					$this->userman->setModuleSettingByGID($id,'missedcall','mcx',true);
-					$this->updateUserbysettins($data['users'],'external',1);
+					$this->updateUserBySettings($data['users'],'external',1);
 				} else {
 					$this->userman->setModuleSettingByGID($id,'missedcall','mcx',false);
-					$this->updateUserbysettins($data['users'],'external',0);
+					$this->updateUserBySettings($data['users'],'external',0);
 				}
 			}
 		}
