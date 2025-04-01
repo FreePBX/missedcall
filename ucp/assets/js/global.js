@@ -11,7 +11,7 @@ var MissedcallC = UCPMC.extend({
 	 * Display Widget
 	 * This method is executed when the side bar widget has finished loading.
 	 * @method displayWidget
-	 * @link https://wiki.freepbx.org/pages/viewpage.action?pageId=71271742#DevelopingforUCP14+-displayWidget
+	 * @link https://sangomakb.atlassian.net/wiki/spaces/FP/pages/10093196/Developing+for+UCP+14#displayWidget
 	 * @param  {string}      widget_id    The widget ID on the dashboard
 	 * @param  {string}      dashboard_id The dashboard ID the widget has been placed on
 	 */
@@ -86,7 +86,7 @@ var MissedcallC = UCPMC.extend({
 	 * Display Side Bar Widget
 	 * This method is executed after the side bar widget has been clicked and the window has fully extended has finished loading.
 	 * @method displaySimpleWidget
-	 * @link https://wiki.freepbx.org/pages/viewpage.action?pageId=71271742#DevelopingforUCP14+-displaySimpleWidget
+	 * @link https://sangomakb.atlassian.net/wiki/spaces/FP/pages/10093196/Developing+for+UCP+14#displaySimpleWidget
 	 * @param  {string}            widget_id The widget id in the sidebar
 	 */
 	displaySimpleWidget: function(widget_id) {
@@ -175,7 +175,7 @@ var MissedcallC = UCPMC.extend({
 	 * Pre Poll (Before the poll)
 	 * This method is used to populate data to send to the PHP poll function for this module
 	 * @method prepoll
-	 * @link https://wiki.freepbx.org/pages/viewpage.action?pageId=71271742#DevelopingforUCP14+-prepoll
+	 * @link https://sangomakb.atlassian.net/wiki/spaces/FP/pages/10093196/Developing+for+UCP+14#prepoll
 	 * @return  {mixed}      Data to send back to the PHP poll function for this module
 	 */
 	prepoll: function() {
@@ -189,7 +189,7 @@ var MissedcallC = UCPMC.extend({
 	 * Poll
 	 * This method is used to process data returned from the PHP poll function for this module
 	 * @method poll
-	 * @link https://wiki.freepbx.org/pages/viewpage.action?pageId=71271742#DevelopingforUCP14+-poll(Javascript)
+	 * @link https://sangomakb.atlassian.net/wiki/spaces/FP/pages/10093196/Developing+for+UCP+14#poll-(Javascript)
 	 * @param  {mixed}      data    Data returned from the PHP poll function for this module
 	 */
 	poll: function(data){
