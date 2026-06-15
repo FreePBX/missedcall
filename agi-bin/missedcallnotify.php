@@ -212,8 +212,9 @@ if ($mcqueue) {
 // determine if call is to a followme group, check for value of channel
 $mcfmfm = get_var($agi, "MCFMFM");
 if ($mcfmfm) {
-	$call_type = "findmefollow";
-	$followme  = true;
+	$call_type       = "findmefollow";
+	$followme        = true;
+	$chan_orgin_from = "findmefollow";
 }
 
 // determine if call is internal
@@ -273,7 +274,6 @@ if ($queue) {
 	$chan_orgin_from = "queue";
 }
 
-
 if ($linkedid != $uniqueid) {
 	if ($channeldialstatus == "") { // No dial status then it considered as missed
 		$channeldialstatus = "ANSWER";
@@ -282,8 +282,9 @@ if ($linkedid != $uniqueid) {
 		}
 	}
 	$extension = $mc->getDeviceUser($extension);
-	$q         = "INSERT INTO missedcalllog (`callerid`,`calleridname`,`destination`,`call_type`,`uniqueid`,`linkedid`,`channel`,`dialstatus`,`chan_orgin_from`) VALUES('$mcexten','$mcname','$extension','$call_type','$uniqueid','$linkedid','$curchannel','$channeldialstatus','$chan_orgin_from')";
-	$db->query($q);
+
+	$sql = "INSERT INTO missedcalllog (`callerid`,`calleridname`,`destination`,`call_type`,`uniqueid`,`linkedid`,`channel`,`dialstatus`,`chan_orgin_from`) VALUES (?,?,?,?,?,?,?,?,?)";
+	$freepbx->Database->prepare($sql)->execute([$mcexten, $mcname, $extension, $call_type, $uniqueid, $linkedid, $curchannel, $channeldialstatus, $chan_orgin_from]);
 }
 
 // if the linkedid and uniqueid are same then its the channel who orginated the call. So we can sent the finaly missed call report
