@@ -1,7 +1,7 @@
 <module>
 	<rawname>missedcall</rawname>
 	<name>Missed Call Notification</name>
-	<version>17.0.6</version>
+	<version>18.0.1</version>
 	<publisher>Sangoma Technologies Corporation</publisher>
 	<license>GPLv3+</license>
 	<licenselink>https://www.gnu.org/licenses/gpl-3.0.txt</licenselink>
@@ -11,24 +11,19 @@
 		<missedcall>Missed Call Notification</missedcall>
 	</menuitems>
 	<changelog>
-		*17.0.6* FREEI-2969 Unauthenticated SQL injection 
-		*17.0.5* FREEI-2969 Unauthenticated SQL injection 
-		*17.0.4* FREEI-2969 Unauthenticated SQL injection 
-		*17.0.3* Fixing Github #607 Minor changes for Missed Calls module 
-		*17.0.2* Fixing Github #449 Missed call not working 
-		*17.0.1.2* Initial release for 17.0
+		*18.0.1* initial release
 	</changelog>
 	<description>Send email notifications to users when a call is missed</description>
 	<category>Applications</category>
 	<supported>
-		<version>17.0</version>
+		<version>18.0</version>
 	</supported>
 	<depends>
-		<phpversion>7.4</phpversion>
-		<module>framework ge 17.0.1</module>
-		<module>core ge 17.0.1</module>
-		<module>userman ge 17.0.1</module>
-		<module>queues ge 17.0.1</module>
+		<phpversion>8.4.0</phpversion>
+		<module>framework ge 18.0.1</module>
+		<module>core ge 18.0.1</module>
+		<module>userman ge 18.0.1</module>
+		<module>queues ge 18.0.1</module>
 	</depends>
 	<hooks>
 		<ucp class="Ucp">
