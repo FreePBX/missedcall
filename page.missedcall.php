@@ -61,12 +61,12 @@
 					<div role="tabpanel">
 						<ul class="nav nav-tabs" role="tablist">
 							<li role="presentation" class="active">
-								<a href="#notiExtensions" aria-controls="notiExtensions" role="tab" data-toggle="tab" aria-expanded="true">
+								<a href="#notiExtensions" aria-controls="notiExtensions" role="tab" data-bs-toggle="tab" aria-expanded="true">
 									<?php echo _('Extensions'); ?>
 								</a>
 							</li>
 							<li role="presentation" class="">
-								<a href="#emailSettings" aria-controls="emailSettings" role="tab" data-toggle="tab"
+								<a href="#emailSettings" aria-controls="emailSettings" role="tab" data-bs-toggle="tab"
 									aria-expanded="false">
 									<?php echo _('Email Settings'); ?>
 								</a>
